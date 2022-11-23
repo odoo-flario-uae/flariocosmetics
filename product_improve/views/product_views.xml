@@ -20,7 +20,6 @@
         <field name="arch" type="xml">
             <!--    Могилевец 23.11.2022-->
             <xpath expr="//field[@name='list_price']" position="after">
-                <field name='currency_id' invisible="1"/>
                 <field name="pricelist_price"  widget="monetary" options="{'currency_field': 'currency_id'}" decoration-warning="pricelist_price == 0" optional="show"/>
             </xpath>
             <!--    Могилевец 23.11.2022-->
