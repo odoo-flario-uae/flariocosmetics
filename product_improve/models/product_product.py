@@ -14,14 +14,16 @@ class ProductProduct(models.Model):
         for product in self:
             pricelist_items = product.env['product.pricelist.item'].search(
                 ['&', '&', '|',
-                    '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
-                    '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant'),
-                    '|', ['company_id', '=', self.env.company.id], ['company_id', '=', False],
-                    ['currency_id', '=', product.currency_id.id]
+                 '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
+                 '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant'),
+                 '|', ['company_id', '=', self.env.company.id], ['company_id', '=', False],
+                 ['currency_id', '=', product.currency_id.id]
                  ]
             )
             if len(pricelist_items) == 1:
-                product.pricelist_price = product.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
+                prices = product.with_context(pricelist=pricelist_items[0].pricelist_id.id)._compute_product_price()
+                product.pricelist_price = prices.get(product.id, 0.0)
+                # product.pricelist_price = product.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
             else:
                 product.pricelist_price = 0.0
     #### END Могилевец 23.11.2022  ####

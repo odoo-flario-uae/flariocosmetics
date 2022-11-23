@@ -10,14 +10,17 @@ class ProductTemplate(models.Model):
     def _compute_template_pricelist_price(self):
         for template in self:
             pricelist_items = template.env['product.pricelist.item'].search(
-                ["&","&",
+                ["&", "&",
                  "|", ["product_tmpl_id", "=", template.id], ["product_id", "in", template.product_variant_ids.ids],
                  "|", ["company_id", "=", self.env.company.id], ["company_id", "=", False],
                  ["currency_id", "=", template.currency_id.id]
                  ]
             )
             if len(pricelist_items) == 1:
-                template.pricelist_price = template.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
+                prices = template.with_context(
+                    pricelist=pricelist_items[0].pricelist_id.id)._compute_template_price_no_inverse()()
+                template.pricelist_price = prices.get(template.id, 0.0)
+                # template.pricelist_price = template.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
             else:
                 template.pricelist_price = 0.0
 
