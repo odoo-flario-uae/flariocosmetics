@@ -4,7 +4,7 @@ from odoo import models, fields
 
 class ProductProduct(models.Model):
     _name = "product.product"
-    _inherit = ["product.product", "website.published.multi.mixin"]
+    _inherit = "product.product"
 
     #### BEGIN Могилевец 23.11.2022  ####
     pricelist_price = fields.Float(
