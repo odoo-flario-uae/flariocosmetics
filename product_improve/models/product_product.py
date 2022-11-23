@@ -24,14 +24,15 @@ class ProductProduct(models.Model):
                 # prices = product.with_context(pricelist=pricelist_items[0].pricelist_id.id)._compute_product_price()
                 # product.pricelist_price = prices.get(product.id, 0.0)
                 #product.pricelist_price = product.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
-                product.pricelist_price = 222
-                # pricelist_rule = pricelist_items[0].pricelist_id
-                # date = fields.Date.today()
-                # #product = product.with_context(**product._get_product_price_context())
-                # qty = 1.0
-                # uom = product.uom_id
-                # price = pricelist_rule._compute_price(product, qty, uom, date, currency=product.currency_id)
-                # product.pricelist_price = price
+                # product.pricelist_price = 0.0
+
+                pricelist_rule = pricelist_items[0].pricelist_id
+                date = fields.Date.today()
+                #product = product.with_context(**product._get_product_price_context())
+                qty = 1.0
+                uom = product.uom_id
+                price = pricelist_rule._compute_price(product, qty, uom, date, currency=product.currency_id)
+                product.pricelist_price = price
             else:
                 product.pricelist_price = 0.0
 
