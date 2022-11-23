@@ -24,7 +24,7 @@ class ProductProduct(models.Model):
                 # prices = product.with_context(pricelist=pricelist_items[0].pricelist_id.id)._compute_product_price()
                 # product.pricelist_price = prices.get(product.id, 0.0)
                 #product.pricelist_price = product.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
-                product.pricelist_price = pricelist_items[0].pricelist_id.id
+                product.pricelist_price = 222
             else:
                 product.pricelist_price = 0.0
     #### END Могилевец 23.11.2022  ####

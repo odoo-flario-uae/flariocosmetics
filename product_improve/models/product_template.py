@@ -21,7 +21,7 @@ class ProductTemplate(models.Model):
                 #     pricelist=pricelist_items[0].pricelist_id.id)._compute_template_price_no_inverse()()
                 # template.pricelist_price = prices.get(template.id, 0.0)
                 # template.pricelist_price = template.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
-                template.pricelist_price = pricelist_items[0].pricelist_id.id
+                template.pricelist_price = 111
             else:
                 template.pricelist_price = 0.0
 
