@@ -27,11 +27,10 @@ class ProductProduct(models.Model):
                 #product.pricelist_price = 222
                 pricelist_rule = pricelist_items[0].pricelist_id
                 date = fields.Date.today()
-                product = product.with_context(**self._get_product_price_context())
+                product = product.with_context(**product._get_product_price_context())
                 qty = 1.0
                 uom = product.uom_id
                 price = pricelist_rule._compute_price(product, qty, uom, date, currency=product.currency_id)
-
                 product.pricelist_price = price
 
 
