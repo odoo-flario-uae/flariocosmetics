@@ -17,10 +17,10 @@ class ProductTemplate(models.Model):
                  ]
             )
             if len(pricelist_items) == 1:
-                prices = template.with_context(
-                    pricelist=pricelist_items[0].pricelist_id.id)._compute_template_price_no_inverse()()
-                template.pricelist_price = prices.get(template.id, 0.0)
-                # template.pricelist_price = template.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
+                # prices = template.with_context(
+                #     pricelist=pricelist_items[0].pricelist_id.id)._compute_template_price_no_inverse()()
+                # template.pricelist_price = prices.get(template.id, 0.0)
+                template.pricelist_price = template.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
             else:
                 template.pricelist_price = 0.0
 
