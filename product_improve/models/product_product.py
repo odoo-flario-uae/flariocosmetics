@@ -24,8 +24,40 @@ class ProductProduct(models.Model):
                 # prices = product.with_context(pricelist=pricelist_items[0].pricelist_id.id)._compute_product_price()
                 # product.pricelist_price = prices.get(product.id, 0.0)
                 #product.pricelist_price = product.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
-                product.pricelist_price = 222
+                #product.pricelist_price = 222
+                pricelist_rule = pricelist_items[0].pricelist_id
+                date = fields.Date.today()
+                product = product.with_context(**self._get_product_price_context())
+                qty = 1.0
+                uom = product.uom_id
+                price = pricelist_rule._compute_price(product, qty, uom, date, currency=product.currency_id)
+
+                product.pricelist_price = price
+
+
             else:
                 product.pricelist_price = 0.0
+
+    def _get_product_price_context(self):
+        """Gives the context for product price computation.
+        :return: additional context to consider extra prices from attributes in the base product price.
+        :rtype: dict
+        """
+        self.ensure_one()
+        res = {}
+
+        # It is possible that a no_variant attribute is still in a variant if
+        # the type of the attribute has been changed after creation.
+        no_variant_attributes_price_extra = [
+            ptav.price_extra for ptav in self.product_no_variant_attribute_value_ids.filtered(
+                lambda ptav:
+                ptav.price_extra and
+                ptav not in self.product_id.product_template_attribute_value_ids
+            )
+        ]
+        if no_variant_attributes_price_extra:
+            res['no_variant_attributes_price_extra'] = tuple(no_variant_attributes_price_extra)
+
+        return res
     #### END Могилевец 23.11.2022  ####
 
