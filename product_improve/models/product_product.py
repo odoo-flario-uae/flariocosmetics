@@ -27,6 +27,6 @@ class ProductProduct(models.Model):
                 price = pricelist_rule._compute_price(product, qty, uom, date, currency=product.currency_id)
                 product.pricelist_price = price
             else:
-                product.pricelist_price = 0.01
+                product.pricelist_price = 0.0
     #### END Могилевец 23.11.2022  ####
 
