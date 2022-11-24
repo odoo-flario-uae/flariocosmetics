@@ -4,8 +4,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     #### BEGIN Могилевец 23.11.2022  ####
-    pricelist_price = fields.Float(
-        'Pricelist Price', compute='_compute_template_pricelist_price', digits='Product Price')
+    #pricelist_price = fields.Float('Pricelist Price', compute='_compute_template_pricelist_price', digits='Product Price')
 
     def _compute_template_pricelist_price(self):
         for template in self:
@@ -21,7 +20,13 @@ class ProductTemplate(models.Model):
                 #     pricelist=pricelist_items[0].pricelist_id.id)._compute_template_price_no_inverse()()
                 # template.pricelist_price = prices.get(template.id, 0.0)
                 # template.pricelist_price = template.with_context(pricelist=pricelist_items[0].pricelist_id.id).price
-                template.pricelist_price = 111
+                pricelist_rule = pricelist_items[0]
+                date = fields.Date.today()
+                # template = template.with_context(**template._get_product_price_context())
+                qty = 1.0
+                uom = template.uom_id
+                price = pricelist_rule._compute_price(template, qty, uom, date, currency=template.currency_id)
+                template.pricelist_price = price
             else:
                 template.pricelist_price = 0.0
 
