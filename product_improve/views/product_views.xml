@@ -30,15 +30,15 @@
         </field>
     </record>
 
-    <record id="product_template_only_form_view_inherit" model="ir.ui.view">
-        <field name="name">product_template_only_form_view_inherit</field>
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <!--  Андросов 30.11.2022 -->
             <xpath expr="//field[@name='barcode']" position="after">
-                <field name="directions"/>
-                <field name="ingredients"/>
+                <field name="extra_directions"/>
+                <field name="extra_ingredients"/>
             </xpath>
             <!-- Андросов 30.11.2022 -->
         </field>

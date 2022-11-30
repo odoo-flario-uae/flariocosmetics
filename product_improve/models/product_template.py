@@ -2,8 +2,8 @@ from odoo import models, fields, api
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
-    directions = fields.Char(string="Directions")
-    ingredients = fields.Char(string="Ingredients")
+    extra_directions = fields.Text(string="Directions")
+    extra_ingredients = fields.Text(string="Ingredients")
 
     #### BEGIN Могилевец 23.11.2022  ####
     #pricelist_price = fields.Float('Pricelist Price', compute='_compute_template_pricelist_price', digits='Product Price')
