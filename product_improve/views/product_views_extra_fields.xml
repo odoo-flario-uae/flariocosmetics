@@ -1,0 +1,19 @@
+<odoo>
+    <record id="product_template_only_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <!--  Андросов 30.11.2022 -->
+            <xpath expr="//group[@name='description']" position="after">
+                    <group string="Website directions" name="directions">
+                        <field colspan="2" name="extra_directions"/>
+                    </group>
+                    <group string="Website ingredients" name="ingredients">
+                        <field colspan="2" name="extra_ingredients"/>
+                    </group>                
+            </xpath>
+            <!-- Андросов 30.11.2022 -->
+        </field>
+    </record>
+</odoo>
