@@ -29,12 +29,12 @@
     </record>
 
 
-    <record id="product_template_form_view" model="ir.ui.view">
-        <field name="name">product.template.common.form</field>
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='description_sale']" position="after">
+            <xpath expr="//field[@name='default_code']" position="after">
                 <field name="directions"/>
                 <field name="ingredients"/>
             </xpath>
