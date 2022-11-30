@@ -5,7 +5,7 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <!--  Андросов 30.11.2022 -->
-            <xpath expr="//field[@name='description_sale']" position="after">
+            <xpath expr="//group[@name='description']" position="after">
                     <group string="Website directions" name="directions">
                         <field colspan="2" name="extra_directions"/>
                     </group>
