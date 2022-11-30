@@ -36,7 +36,7 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <!--  Андросов 30.11.2022 -->
-            <xpath expr="//field[@name='barcode']" position="after">
+            <xpath expr="//field[@name='default_code']" position="after">
                 <field name="extra_directions"/>
                 <field name="extra_ingredients"/>
             </xpath>
