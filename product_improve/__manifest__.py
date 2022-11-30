@@ -9,5 +9,6 @@
         "product",
     ],
     "data": [
+        "views/product_views_extra_fields.xml"
     ],
 }
