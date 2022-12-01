@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_hsn" inherit_id="website_sale.product" name="product hsn">
+
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+
+            <hr />
+
+            <span>
+
+                <strong>HSN/SAC Information:</strong>
+
+            </span>
+
+            <br />
+
+            <p>
+                Hello Code:
+                <span t-field="product.default_code" />
+
+            </p>
+
+            <p>
+                Description:
+                <span t-field="product.l10n_in_hsn_description" />
+
+            </p>
+
+        </xpath>
+    </template>
+</odoo>
