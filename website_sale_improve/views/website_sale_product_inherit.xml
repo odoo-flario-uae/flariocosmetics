@@ -37,7 +37,7 @@
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
-
+                        <p t-field="product.extra_directions" class="text-muted my-2" placeholder="About directions product"/>
                       </div>
                     </div>
                   </div>
