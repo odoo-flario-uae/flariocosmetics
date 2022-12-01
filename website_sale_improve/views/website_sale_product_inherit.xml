@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="product_hsn" inherit_id="website_sale.product" name="product hsn">
+    <template id="product_accordion" inherit_id="website_sale.product" name="product accordions">
 
         <xpath expr="//a[@id='add_to_cart']" position="after">
 
@@ -19,13 +19,6 @@
                 <span t-field="product.default_code" />
 
             </p>
-
-            <p>
-                Description:
-                <span t-field="product.l10n_in_hsn_description" />
-
-            </p>
-
         </xpath>
     </template>
 </odoo>

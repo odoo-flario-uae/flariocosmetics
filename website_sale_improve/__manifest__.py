@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 {
-    'name': 'Google places autocompletion',
+    'name': 'Editing website page',
     'category': 'Website/Website',
     'summary': 'Update Website pages',
     'version': '1.0',
