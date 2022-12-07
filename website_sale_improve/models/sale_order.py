@@ -13,10 +13,8 @@ class SaleOrder(models.Model):
     # change create method
     @api.model_create_multi
     def create(self, vals_list):
-        __logger.debug(self)
         tb.send_message('-648259220', 'Created order')
         for vals in vals_list:
-            _logger.debug(vals)
             # if vals.get('website_id'):
             #     website = self.env['website'].browse(vals['website_id'])
                 # if 'company_id' in vals:
