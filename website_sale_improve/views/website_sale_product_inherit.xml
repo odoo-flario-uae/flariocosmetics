@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="product_accordion" inherit_id="website_sale.product" name="product accordions">
-
         <xpath expr="//section[@id='product_detail']" position="after">
             <section class="accordions container py-4">
                 <div class="accordion" id="accordionExample">
@@ -45,4 +44,10 @@
             </section>
         </xpath>
     </template>
+
+    <template id="product_accordion" inherit_id="website_sale.address" name="Update billing adress">
+      <xpath expr="//div[@id='div_phone']" position="after">
+        <field name="extra_communication_method" widget="selection"/>
+      </xpath>
+  </template>
 </odoo>
