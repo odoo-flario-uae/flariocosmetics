@@ -47,8 +47,11 @@
 
     <template id="method_communication" inherit_id="website_sale.address" name="Update billing adress">
       <xpath expr="//div[@id='div_phone']" position="after">
-        <!-- <field name="extra_communication_method" widget="selection"/> -->
-        <span>New field</span>
+        <select class="form-control" name="extra_communication_method">
+          <t t-foreach="categories" t-as="extra_communication_method">
+              <option t-attf-value="#{extra_communication_method.id}"><t t-esc="extra_communication_method.name"/></option>
+          </t>
+        </select>
       </xpath>
   </template>
 </odoo>

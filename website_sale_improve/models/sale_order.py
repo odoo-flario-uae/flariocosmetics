@@ -3,8 +3,9 @@ from telebot import telebot
 import logging
 _logger = logging.getLogger(__name__)
 
-# TOKEN = '1998721499:AAEANtp7-E7JwRk0D3esngYflc_n-tu1qWk' # Ponemos nuestro Token generado con el @BotFather
-# tb = telebot.TeleBot(TOKEN)
+TOKEN = '5867719962:AAHz_CUbJS5lwNptB-Ryiz8YD6qYqsKIeBI' # Ponemos nuestro Token generado con el @BotFather
+tb = telebot.TeleBot(TOKEN)
+# chat_id = -648259220
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -12,10 +13,11 @@ class SaleOrder(models.Model):
     # change create method
     @api.model_create_multi
     def create(self, vals_list):
+        __logger.debug(self)
         for vals in vals_list:
-            if vals.get('website_id'):
-                website = self.env['website'].browse(vals['website_id'])
-                _logger.debug(vals)
+            _logger.debug(vals)
+            # if vals.get('website_id'):
+            #     website = self.env['website'].browse(vals['website_id'])
                 # if 'company_id' in vals:
                 #     company = self.env['res.company'].browse(vals['company_id'])
                 #     if website.company_id.id != company.id:
