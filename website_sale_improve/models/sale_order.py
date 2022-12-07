@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 from telebot import telebot
 import logging
 _logger = logging.getLogger(__name__)
