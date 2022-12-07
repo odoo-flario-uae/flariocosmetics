@@ -3,7 +3,7 @@
 from odoo import models, fields
 
 
-class Website(models.Model):
-    _inherit = 'website_sale'
+class WebsiteSale(models.Model):
+    _inherit = 'website.sale'
     extra_communication_method = fields.Selection(selection=[('whatsapp','WhatsApp'),('email','Email'),('by_phone','By phone')],string='Communication method')
 
