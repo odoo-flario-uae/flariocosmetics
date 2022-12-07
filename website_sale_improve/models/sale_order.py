@@ -15,13 +15,13 @@ class SaleOrder(models.Model):
     def create(self, vals_list):
         tb.send_message('-648259220', 'Created order')
         for vals in vals_list:
-            # if vals.get('website_id'):
-            #     website = self.env['website'].browse(vals['website_id'])
-                # if 'company_id' in vals:
-                #     company = self.env['res.company'].browse(vals['company_id'])
-                #     if website.company_id.id != company.id:
-                #         raise ValueError(_("The company of the website you are trying to sale from (%s) is different than the one you want to use (%s)") % (website.company_id.name, company.name))
-                # else:
-                #     vals['company_id'] = website.company_id.id
+            if vals.get('website_id'):
+                website = self.env['website'].browse(vals['website_id'])
+                if 'company_id' in vals:
+                    company = self.env['res.company'].browse(vals['company_id'])
+                    if website.company_id.id != company.id:
+                        raise ValueError(_("The company of the website you are trying to sale from (%s) is different than the one you want to use (%s)") % (website.company_id.name, company.name))
+                else:
+                    vals['company_id'] = website.company_id.id
 
         return super().create(vals_list)
