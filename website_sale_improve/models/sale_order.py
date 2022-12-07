@@ -3,7 +3,7 @@ from telebot import telebot
 import logging
 _logger = logging.getLogger(__name__)
 
-TOKEN = '5867719962:AAHz_CUbJS5lwNptB-Ryiz8YD6qYqsKIeBI' # Ponemos nuestro Token generado con el @BotFather
+TOKEN = '5867719962:AAHz_CUbJS5lwNptB-Ryiz8YD6qYqsKIeBI' 
 tb = telebot.TeleBot(TOKEN)
 # chat_id = -648259220
 
@@ -14,6 +14,7 @@ class SaleOrder(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         __logger.debug(self)
+        tb.send_message('-648259220', 'Created order')
         for vals in vals_list:
             _logger.debug(vals)
             # if vals.get('website_id'):
