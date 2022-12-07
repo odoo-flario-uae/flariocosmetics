@@ -45,9 +45,10 @@
         </xpath>
     </template>
 
-    <template id="product_accordion" inherit_id="website_sale.address" name="Update billing adress">
+    <template id="method_communication" inherit_id="website_sale.address" name="Update billing adress">
       <xpath expr="//div[@id='div_phone']" position="after">
-        <field name="extra_communication_method" widget="selection"/>
+        <!-- <field name="extra_communication_method" widget="selection"/> -->
+        <span>New field</span>
       </xpath>
   </template>
 </odoo>

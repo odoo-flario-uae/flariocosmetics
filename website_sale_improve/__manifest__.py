@@ -7,7 +7,7 @@
     'version': '1.0',
     'description': "Module for updating and changing view of website pages",
     'depends': [
-        'website'
+        'website_sale'
     ],
     'data': [
         'views/website_sale_product_inherit.xml'
