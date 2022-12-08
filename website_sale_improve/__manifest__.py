@@ -11,7 +11,8 @@
         'sale'
     ],
     'data': [
-        'views/website_sale_product_inherit.xml'
+        'views/website_sale_product_inherit.xml', 
+        'views/res_config_settings_views.xml'
     ],
     'license': 'LGPL-3',
 }
