@@ -1,68 +1,68 @@
 <odoo>
-    <record id="product_template_form_view_stock_logistic_inherit" model="ir.ui.view">
-        <field name="name">product.template.form.view.stock.logistic.inherit</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_form_view"/>
-        <field name="arch" type="xml">
-            <!--    Могилевец 12.12.2022-->
-            <xpath expr="//label[@for='weight']" position="before">
-                <label for="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
-                <div class="o_row" name="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="lenght" class="oe_inline"/> мм
-                </div>
-                <label for="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
-                <div class="o_row" name="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="width" class="oe_inline"/> мм
-                </div>
-                <label for="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
-                <div class="o_row" name="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="height" class="oe_inline"/> мм
-                </div>
-            </xpath>
-             <xpath expr="//div[@name='weight']" position="after">
-                <label for="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
-                <div class="o_row" name="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="weight_brutto"/>
-                    <span><field name="weight_uom_name"/></span>
-                </div>
-            </xpath>
-            <!--    Могилевец 12.12.2022-->
-        </field>
-    </record>
+<!--    <record id="product_template_form_view_stock_logistic_inherit" model="ir.ui.view">-->
+<!--        <field name="name">product.template.form.view.stock.logistic.inherit</field>-->
+<!--        <field name="model">product.template</field>-->
+<!--        <field name="inherit_id" ref="product.product_template_form_view"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            &lt;!&ndash;    Могилевец 12.12.2022&ndash;&gt;-->
+<!--            <xpath expr="//label[@for='weight']" position="before">-->
+<!--                <label for="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>-->
+<!--                <div class="o_row" name="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">-->
+<!--                    <field name="lenght" class="oe_inline"/> мм-->
+<!--                </div>-->
+<!--                <label for="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>-->
+<!--                <div class="o_row" name="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">-->
+<!--                    <field name="width" class="oe_inline"/> мм-->
+<!--                </div>-->
+<!--                <label for="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>-->
+<!--                <div class="o_row" name="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">-->
+<!--                    <field name="height" class="oe_inline"/> мм-->
+<!--                </div>-->
+<!--            </xpath>-->
+<!--             <xpath expr="//div[@name='weight']" position="after">-->
+<!--                <label for="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>-->
+<!--                <div class="o_row" name="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">-->
+<!--                    <field name="weight_brutto"/>-->
+<!--                    <span><field name="weight_uom_name"/></span>-->
+<!--                </div>-->
+<!--            </xpath>-->
+<!--            &lt;!&ndash;    Могилевец 12.12.2022&ndash;&gt;-->
+<!--        </field>-->
+<!--    </record>-->
 
-     <record id="product_variant_easy_edit_view_stock_logistic" model="ir.ui.view">
-        <field name="name">product.product.variant.easy.edit.view.stock.logistic</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
-        <field name="arch" type="xml">
-            <!--    Могилевец 12.12.2022-->
-            <xpath expr="//label[@for='volume']" position="before">
-                <label for="lenght"/>
-                <div class="o_row">
-                    <field name="lenght"/>
-                    <span>мм</span>
-                </div>
-                <label for="width"/>
-                <div class="o_row">
-                    <field name="width"/>
-                    <span>мм</span>
-                </div>
-                <label for="height"/>
-                <div class="o_row">
-                    <field name="height"/>
-                    <span>мм</span>
-                </div>
-            </xpath>
-             <xpath expr="//label[@for='weight']" position="before">
-                <label for="weight_brutto"/>
-                <div class="o_row">
-                    <field name="weight_brutto"/>
-                    <span><field name="weight_uom_name"/></span>
-                </div>
-            </xpath>
-            <!--    Могилевец 12.12.2022-->
-        </field>
-    </record>
+<!--     <record id="product_variant_easy_edit_view_stock_logistic" model="ir.ui.view">-->
+<!--        <field name="name">product.product.variant.easy.edit.view.stock.logistic</field>-->
+<!--        <field name="model">product.product</field>-->
+<!--        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            &lt;!&ndash;    Могилевец 12.12.2022&ndash;&gt;-->
+<!--            <xpath expr="//label[@for='volume']" position="before">-->
+<!--                <label for="lenght"/>-->
+<!--                <div class="o_row">-->
+<!--                    <field name="lenght"/>-->
+<!--                    <span>мм</span>-->
+<!--                </div>-->
+<!--                <label for="width"/>-->
+<!--                <div class="o_row">-->
+<!--                    <field name="width"/>-->
+<!--                    <span>мм</span>-->
+<!--                </div>-->
+<!--                <label for="height"/>-->
+<!--                <div class="o_row">-->
+<!--                    <field name="height"/>-->
+<!--                    <span>мм</span>-->
+<!--                </div>-->
+<!--            </xpath>-->
+<!--             <xpath expr="//label[@for='weight']" position="before">-->
+<!--                <label for="weight_brutto"/>-->
+<!--                <div class="o_row">-->
+<!--                    <field name="weight_brutto"/>-->
+<!--                    <span><field name="weight_uom_name"/></span>-->
+<!--                </div>-->
+<!--            </xpath>-->
+<!--            &lt;!&ndash;    Могилевец 12.12.2022&ndash;&gt;-->
+<!--        </field>-->
+<!--    </record>-->
 
     <record id="product_template_only_form_view_inherit" model="ir.ui.view">
         <field name="name">product.template.inherit</field>
