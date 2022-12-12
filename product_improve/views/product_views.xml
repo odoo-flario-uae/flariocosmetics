@@ -1,32 +1,66 @@
 <odoo>
-
-    <!-- description_sale add fields after -->
-    <record id="view_product_tree_inherit" model="ir.ui.view">
-        <field name="name">product.stock.tree.inherit</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_product_tree_view"/>
+    <record id="product_template_form_view_stock_logistic_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.view.stock.logistic.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <!--    Могилевец 23.11.2022-->
-            <xpath expr="//field[@name='lst_price']" position="after">
-                <field name='currency_id' invisible="1"/>
-                <field name="pricelist_price"  widget="monetary" options="{'currency_field': 'currency_id'}" decoration-warning="pricelist_price == 0" optional="show"/>
+            <!--    Могилевец 12.12.2022-->
+            <xpath expr="//label[@for='weight']" position="before">
+                <label for="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                <div class="o_row" name="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                    <field name="lenght" class="oe_inline"/> мм
+                </div>
+                <label for="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                <div class="o_row" name="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                    <field name="width" class="oe_inline"/> мм
+                </div>
+                <label for="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                <div class="o_row" name="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                    <field name="height" class="oe_inline"/> мм
+                </div>
             </xpath>
-            <!--    Могилевец 23.11.2022-->
+             <xpath expr="//div[@name='weight']" position="after">
+                <label for="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                <div class="o_row" name="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                    <field name="weight_brutto"/>
+                    <span><field name="weight_uom_name"/></span>
+                </div>
+            </xpath>
+            <!--    Могилевец 12.12.2022-->
         </field>
     </record>
 
-    <record id="view_product_template_tree_inherit" model="ir.ui.view">
-        <field name="name">product.template.stock.tree.inherit</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_tree_view"/>
+     <record id="product_variant_easy_edit_view_stock_logistic" model="ir.ui.view">
+        <field name="name">product.product.variant.easy.edit.view.stock.logistic</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
-            <!--    Могилевец 23.11.2022-->
-            <xpath expr="//field[@name='list_price']" position="after">
-                <field name="pricelist_price"  widget="monetary" options="{'currency_field': 'currency_id'}" decoration-warning="pricelist_price == 0" optional="show"/>
-                <field name="directions"/>
-                <field name="ingredients"/>
+            <!--    Могилевец 12.12.2022-->
+            <xpath expr="//label[@for='volume']" position="before">
+                <label for="lenght"/>
+                <div class="o_row">
+                    <field name="lenght"/>
+                    <span>мм</span>
+                </div>
+                <label for="width"/>
+                <div class="o_row">
+                    <field name="width"/>
+                    <span>мм</span>
+                </div>
+                <label for="height"/>
+                <div class="o_row">
+                    <field name="height"/>
+                    <span>мм</span>
+                </div>
             </xpath>
-            <!--    Могилевец 23.11.2022-->
+             <xpath expr="//label[@for='weight']" position="before">
+                <label for="weight_brutto"/>
+                <div class="o_row">
+                    <field name="weight_brutto"/>
+                    <span><field name="weight_uom_name"/></span>
+                </div>
+            </xpath>
+            <!--    Могилевец 12.12.2022-->
         </field>
     </record>
 
