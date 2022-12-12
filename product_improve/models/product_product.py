@@ -30,3 +30,16 @@ class ProductProduct(models.Model):
                 product.pricelist_price = 0.0
     #### END Могилевец 23.11.2022  ####
 
+    #### BEGIN Могилевец 12.12.2022  ####
+    weight_brutto = fields.Float(string="Weight brutto", digits='Stock Weight')
+    height = fields.Float(string="Height")
+    width = fields.Float(string="Width")
+    lenght = fields.Float(string="Lenght")
+
+    @api.onchange('height', 'width', 'lenght')
+    def _calc_volume(self):
+        for product in self:
+            if product.height != 0 and product.width != 0 and product.lenght != 0:
+                product.volume = (product.height * product.width * product.lenght) / 1000000000
+    #### END Могилевец 12.12.2022  ####
+
