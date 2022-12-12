@@ -10,6 +10,6 @@
     ],
     "data": [
         "views/product_views_extra_fields.xml",
-
+        "views/product_views.xml",
     ],
 }
