@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_changes" inherit_id="account.report_invoice_document">
+        <xpath expr="//th[@name='th_description']" position="replace">
+            <th name="th_description" class="text-start"><span>Position</span></th>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name']" position="replace">
+            <td name="account_invoice_line_name"><span t-field="line.product_id.display_name" t-options="{'widget': 'text'}"/></td>
+        </xpath>
+        <xpath expr="//div[@name='address_not_same_as_shipping']" position="after">
+            <div t-if="o.partner_id.company_registry">
+                <span>Company ID:</span>
+                <span t-field="o.partner_id.company_registry" t-options="{'widget': 'text'}"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']" position="after">
+            <div t-if="o.partner_id.company_registry">
+                <span>Company ID:</span>
+                <span t-field="o.partner_id.company_registry" t-options="{'widget': 'text'}"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']" position="after">
+            <div t-if="o.partner_id.company_registry">
+                <span>Company ID:</span>
+                <span t-field="o.partner_id.company_registry" t-options="{'widget': 'text'}"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>
