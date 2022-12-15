@@ -8,22 +8,22 @@
             <xpath expr="//label[@for='weight']" position="before">
                 <label for="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="lenght" class="oe_inline"/> мм
+                    <field name="lenght" class="oe_inline"/> mm
                 </div>
                 <label for="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="width" class="oe_inline"/> мм
+                    <field name="width" class="oe_inline"/> mm
                 </div>
                 <label for="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="height" class="oe_inline"/> мм
+                    <field name="height" class="oe_inline"/> mm
                 </div>
             </xpath>
              <xpath expr="//div[@name='weight']" position="after">
                 <label for="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
                     <field name="weight_brutto"/>
-                    <span><field name="weight_uom_name"/></span>
+                    <field name="weight_uom_name"/>
                 </div>
             </xpath>
             <!--    Могилевец 12.12.2022-->
