@@ -2,35 +2,59 @@
     <record id="product_template_form_view_stock_logistic_inherit" model="ir.ui.view">
         <field name="name">product.template.form.view.stock.logistic.inherit</field>
         <field name="model">product.template</field>
+        <field name="priority">5</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!--    Могилевец 12.12.2022-->
             <xpath expr="//label[@for='weight']" position="before">
                 <label for="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="lenght" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="lenght" class="oe_inline"/> мм
+                    <field name="lenght" class="oe_inline"/> mm
                 </div>
                 <label for="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="width" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="width" class="oe_inline"/> мм
+                    <field name="width" class="oe_inline"/> mm
                 </div>
                 <label for="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="height" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="height" class="oe_inline"/> мм
+                    <field name="height" class="oe_inline"/> mm
                 </div>
             </xpath>
              <xpath expr="//div[@name='weight']" position="after">
                 <label for="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="weight_brutto"/>
-                    <span><field name="weight_uom_name"/></span>
+                    <field name="weight_brutto" class="oe_inline"/>
+                    <field name="weight_uom_name"/>
                 </div>
             </xpath>
             <!--    Могилевец 12.12.2022-->
+
+            <xpath expr="//group[@name='group_lots_and_weight']" position="after">
+                 <group name="group_packaging" string="Packaging" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                    <label for="count_in_box" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                    <div class="o_row" name="count_in_box" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                        <field name="count_in_box" class="oe_inline"/> pc
+                    </div>
+                    <label for="weight_box" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                    <div class="o_row" name="weight_box" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                        <field name="weight_box" class="oe_inline"/>
+                        <field name="weight_uom_name"/>
+                    </div>
+                    <label for="count_in_pallet" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                    <div class="o_row" name="count_in_pallet" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                        <field name="count_in_pallet" class="oe_inline"/> pc
+                    </div>
+                    <label for="units_count_in_pallet" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                    <div class="o_row" name="units_count_in_pallet" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                        <field name="units_count_in_pallet" class="oe_inline"/> pc
+                    </div>
+                </group>
+            </xpath>
+
         </field>
     </record>
 
-     <record id="product_variant_easy_edit_view_stock_logistic" model="ir.ui.view">
+    <record id="product_variant_easy_edit_view_stock_logistic" model="ir.ui.view">
         <field name="name">product.product.variant.easy.edit.view.stock.logistic</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
