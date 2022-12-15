@@ -27,6 +27,29 @@
                 </div>
             </xpath>
             <!--    Могилевец 12.12.2022-->
+
+            <xpath expr="//group[@name='group_lots_and_weight']" position="after">
+                 <group name="group_packaging" string="Packaging" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                    <label for="count_in_box" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                    <div class="o_row" name="count_in_box" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                        <field name="count_in_box" class="oe_inline"/> pc
+                    </div>
+                    <label for="weight_box" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                    <div class="o_row" name="weight_box" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                        <field name="weight_box" class="oe_inline"/>
+                        <field name="weight_uom_name"/>
+                    </div>
+                    <label for="count_in_pallet" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                    <div class="o_row" name="count_in_pallet" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                        <field name="count_in_pallet" class="oe_inline"/> pc
+                    </div>
+                    <label for="units_count_in_pallet" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                    <div class="o_row" name="units_count_in_pallet" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                        <field name="units_count_in_pallet" class="oe_inline"/> pc
+                    </div>
+                </group>
+            </xpath>
+
         </field>
     </record>
 

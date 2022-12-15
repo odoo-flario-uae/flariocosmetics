@@ -36,10 +36,14 @@ class ProductProduct(models.Model):
     width = fields.Float(string="Width")
     lenght = fields.Float(string="Lenght")
 
+    count_in_box = fields.Integer(string="Count in box")
+    weight_box = fields.Float(string="Weight in box")
+    count_in_pallet = fields.Integer(string="Box in pallet")
+    units_count_in_pallet = fields.Integer(string="Units in pallet")
+
     @api.onchange('height', 'width', 'lenght')
     def _calc_volume(self):
         for product in self:
             if product.height != 0 and product.width != 0 and product.lenght != 0:
                 product.volume = (product.height * product.width * product.lenght) / 1000000000
     #### END Могилевец 12.12.2022  ####
-

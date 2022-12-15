@@ -12,6 +12,11 @@ class ProductTemplate(models.Model):
     width = fields.Float(string="Width", compute='_compute_width', inverse='_set_width', store=True)
     lenght = fields.Float(string="Lenght", compute='_compute_lenght', inverse='_set_lenght', store=True)
 
+    count_in_box = fields.Integer(string="Count in box", compute='_compute_count_in_box', inverse='_set_count_in_box', store=True)
+    weight_box = fields.Float(string="Weight in box", compute='_compute_weight_box', inverse='_set_weight_box', store=True)
+    count_in_pallet = fields.Integer(string="Box in pallet", compute='_compute_count_in_pallet', inverse='_set_count_in_pallet', store=True)
+    units_count_in_pallet = fields.Integer(string="Units in pallet", compute='_compute_units_count_in_pallet', inverse='_set_units_count_in_pallet', store=True)
+
     @api.depends('product_variant_ids', 'product_variant_ids.weight_brutto')
     def _compute_weight_brutto(self):
         unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
@@ -19,7 +24,6 @@ class ProductTemplate(models.Model):
             template.weight_brutto = template.product_variant_ids.weight_brutto
         for template in (self - unique_variants):
             template.weight_brutto = 0.0
-
     def _set_weight_brutto(self):
         for template in self:
             if len(template.product_variant_ids) == 1:
@@ -68,8 +72,55 @@ class ProductTemplate(models.Model):
     def _calc_volume(self):
         for template in self:
             if template.height != 0 and template.width != 0 and template.lenght != 0:
-                template.volume = (template.height * template.width * template.lenght) / 1000000000  # mm to m3
+                template.volume = (template.height * template.width * template.lenght) / 1000000000 #mm to m3
 
+    @api.depends('product_variant_ids', 'product_variant_ids.count_in_box')
+    def _compute_count_in_box(self):
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
+        for template in unique_variants:
+            template.count_in_box = template.product_variant_ids.count_in_box
+        for template in (self - unique_variants):
+            template.count_in_box = 0.0
+    def _set_count_in_box(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.count_in_box = template.count_in_box
+
+    @api.depends('product_variant_ids', 'product_variant_ids.weight_box')
+    def _compute_weight_box(self):
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
+        for template in unique_variants:
+            template.weight_box = template.product_variant_ids.weight_box
+        for template in (self - unique_variants):
+            template.weight_box = 0.0
+    def _set_weight_box(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.weight_box = template.weight_box
+
+    @api.depends('product_variant_ids', 'product_variant_ids.count_in_pallet')
+    def _compute_count_in_pallet(self):
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
+        for template in unique_variants:
+            template.count_in_pallet = template.product_variant_ids.count_in_pallet
+        for template in (self - unique_variants):
+            template.count_in_pallet = 0.0
+    def _set_count_in_pallet(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.count_in_pallet = template.count_in_pallet
+
+    @api.depends('product_variant_ids', 'product_variant_ids.units_count_in_pallet')
+    def _compute_units_count_in_pallet(self):
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
+        for template in unique_variants:
+            template.units_count_in_pallet = template.product_variant_ids.units_count_in_pallet
+        for template in (self - unique_variants):
+            template.units_count_in_pallet = 0.0
+    def _set_units_count_in_pallet(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.units_count_in_pallet = template.units_count_in_pallet
     #### END Могилевец 12.12.2022  ####
 
 
