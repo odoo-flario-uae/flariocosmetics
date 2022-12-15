@@ -22,7 +22,7 @@
              <xpath expr="//div[@name='weight']" position="after">
                 <label for="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                 <div class="o_row" name="weight_brutto" attrs="{'invisible':[('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
-                    <field name="weight_brutto"/>
+                    <field name="weight_brutto"  class="oe_inline"/>
                     <field name="weight_uom_name"/>
                 </div>
             </xpath>
