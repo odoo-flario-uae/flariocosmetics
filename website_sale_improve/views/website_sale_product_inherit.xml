@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="product_accordion" inherit_id="website_sale.product" name="product accordions">
+
         <xpath expr="//section[@id='product_detail']" position="after">
             <section class="accordions container py-4">
                 <div class="accordion" id="accordionExample">
@@ -44,14 +45,4 @@
             </section>
         </xpath>
     </template>
-
-    <template id="method_communication" inherit_id="website_sale.address" name="Update billing adress">
-      <xpath expr="//div[@id='div_phone']" position="after">
-        <select class="form-control" name="communication_method">
-          <t t-foreach="extra_communication_method" t-as="method">
-              <option t-attf-value="#{method.id}"><t t-esc="method.name"/></option>
-          </t>
-        </select>
-      </xpath>
-  </template>
 </odoo>

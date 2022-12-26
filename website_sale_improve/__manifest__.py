@@ -7,12 +7,10 @@
     'version': '1.0',
     'description': "Module for updating and changing view of website pages",
     'depends': [
-        'website',
-        'sale'
+        'website_sale'
     ],
     'data': [
-        'views/website_sale_product_inherit.xml', 
-        'views/res_config_settings_views.xml'
+        'views/website_sale_product_inherit.xml'
     ],
     'license': 'LGPL-3',
 }
