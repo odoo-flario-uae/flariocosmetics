@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 {
-    'name': 'Editing website page',
+    'name': 'Website Sale: Improvments',
     'category': 'Website/Website',
     'summary': 'Update Website pages',
     'version': '1.0',
