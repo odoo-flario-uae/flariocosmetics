@@ -11,7 +11,9 @@ class Website(models.Model):
         pls = super(Website, self).get_pricelist_available(show_visible)
         partner_sudo = self.env.user.partner_id
         add_pricelist = partner_sudo.additional_pricelist
-        if add_pricelist and add_pricelist not in pls:
+        website = self.with_company(self.company_id)
+        website_pricelists = website.sudo().pricelist_ids
+        if add_pricelist and add_pricelist not in pls and add_pricelist in website_pricelists:
             add_pls = pls + add_pricelist
             pls = add_pls
         return pls
