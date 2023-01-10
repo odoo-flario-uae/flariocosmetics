@@ -3,16 +3,12 @@
 from datetime import timedelta, datetime, date
 import calendar
 
+
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.tools.mail import is_html_empty
-from odoo.tools.misc import format_date
-from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.addons.account.models.company import ResCompany
 
-
-class ResCompany(models.Model):
+class ResCompanyInherit(models.Model):
     _inherit = "res.company"
-
 
     def write(self, values):
         # restrict the closing of FY if there are still unposted entries
@@ -35,3 +31,6 @@ class ResCompany(models.Model):
             #             _('You cannot change the currency of the company since some journal items already exist'))
 
         return super(ResCompany, self).write(values)
+
+
+
