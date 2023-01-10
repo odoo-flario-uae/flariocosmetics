@@ -8,4 +8,5 @@
     "depends": [
         "contacts",
     ],
+    'license': 'LGPL-3',
 }
