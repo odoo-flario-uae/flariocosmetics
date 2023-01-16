@@ -10,4 +10,8 @@
         "website_sale",
         "contacts_improve",
     ],
+    "data": [
+        'views/views.xml',
+        'views/yandex.xml'
+    ]
 }
