@@ -14,7 +14,7 @@ class WebsiteInherit(WebsiteSale):
     def validateParams(p1, p2):
         return p1 if p1 != '' else p2
 
-    def msgToTg(self, sale_order_id, subject, name="", phone=""):
+    def msgToTg(self, sale_order_id, subject, name="", phone="", email=""):
         method_com_arr = {
             "wa":"WhatsApp",
             "phone": "phone",
@@ -27,12 +27,14 @@ class WebsiteInherit(WebsiteSale):
         order_name = order.display_name
         partner_name = self.validateParams(name, order.partner_id.name)
         partner_phone = self.validateParams(phone, order.partner_id.phone)
+        partner_email = self.validateParams(email, order.partner_id.email)
         provide_name = tx.provider_id.name if tx.provider_id.name else "Не указан"
 
         tgText = subject + ": " + order_name + " на сумму: " + str(amout_total) + "\n"
         tgText = tgText + "Заказчик: " + partner_name + "\n"
         # tgText = tgText + "Метод связи: " + method_com + "\n"
         tgText = tgText + "Телефон: " + str(partner_phone) + "\n"
+        tgText = tgText + "Email: " + str(partner_email) + "\n"
         tgText = tgText + "Метод оплаты: " + provide_name + "\n"
         tgText = tgText + "\n Товары: " + "\n"
 
@@ -53,7 +55,7 @@ class WebsiteInherit(WebsiteSale):
     def one_click_buy(self, **post):
         sale_order_id = request.session.data.get('sale_order_id')
         order = request.env['sale.order'].sudo().browse(sale_order_id)
-        tgMessage = self.msgToTg(sale_order_id, "Быстрый заказ", post.get("name"), post.get("phone"))
+        tgMessage = self.msgToTg(sale_order_id, "Быстрый заказ", post.get("name"), post.get("phone"), post.get("email"))
         tb.send_message('-648259220', tgMessage)
         order.with_context().action_confirm()
         request.website.sale_reset()
@@ -63,6 +65,6 @@ class WebsiteInherit(WebsiteSale):
     def shop_payment_confirmation(self, **post):
         res = super(WebsiteInherit, self).shop_payment_confirmation(**post)
         sale_order_id = request.session.data.get('sale_order_id')
-        tgMessage = self.msgToTg(sale_order_id, "Заказ (авт)", post.get("name"), post.get("phone"))
+        tgMessage = self.msgToTg(sale_order_id, "Заказ (авт)", post.get("name"), post.get("phone"), post.get("email"))
         tb.send_message('-648259220', tgMessage)
         return res
