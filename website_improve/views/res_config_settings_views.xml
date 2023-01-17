@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="website_config_settings_view_form_inherit_website_fast_buy" model="ir.ui.view">
+        <field name="name">website.config.settings.view.form.inherit.website.fast.buy</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='digital_content_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="fast_but_setting">
+                    <div class="o_setting_left_pane">
+                        <field name="website_fast_puchasing"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="website_fast_puchasing"/>
+                        <div class="text-muted">
+                            Allow fast purchasing for website
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

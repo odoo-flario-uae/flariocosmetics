@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="fastbuy_template" inherit_id="website.layout" name="Quick purchase for customer">
+        <xpath expr="//div[@id='wrapwrap']" position="after">
+            <t t-if="website.fast_puchasing">
+                <div class="modal fade" id="fastCart" tabindex="-1" aria-labelledby="fastCart" aria-hidden="true">
+                    <form action="/fastbuy/form/submit" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="" data-success-page="">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1>Buy now</h1>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <p>Fill in the form and our manager will contact you within 5 minutes in WhatsApp.</p>
+                                    </div>
+                                    <div class="row s_col_no_resize s_col_no_bgcolor mb-3">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="name">
+                                            <span class="s_website_form_label_content">Name</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="name" type="text" class="form-control s_website_form_input" name="name" required="1"/>
+                                        </div>
+                                    </div>
+                                    <div class="row s_col_no_resize s_col_no_bgcolor mb-3">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="phone">
+                                            <span class="s_website_form_label_content">Phone</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="phone" type="text" class="form-control s_website_form_input" name="phone" required="1"/>
+                                        </div>
+                                    </div>
+                                    <div class="row s_col_no_resize s_col_no_bgcolor mb-3">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="email">
+                                            <span class="s_website_form_label_content">Email</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="email" type="email" class="form-control s_website_form_input" name="email"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        </xpath>
+    </template>
+    <template id="fastbuy_template_button" inherit_id="website_sale.total" name="Quick purchase button">
+        <xpath expr="//div[@id='cart_total']" position="after">
+            <t t-if="website.fast_puchasing">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fastCart"><i class="fa fa-bolt me-2"></i><span style="font-weight: 800">Buy Now</span></button>
+            </t>
+        </xpath>
+    </template>
+</odoo>
