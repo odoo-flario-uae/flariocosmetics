@@ -12,7 +12,7 @@
     ],
     "data": [
         'views/views.xml',
-        'views/yandex.xml',
+        'views/gtm.xml',
         'views/res_config_settings_views.xml'
     ]
 }
