@@ -82,7 +82,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
 
             #total_comission += line_comission
 
-            sale_id = self.env['sale.order'].search([('origin', '=', origin)])
+            sale_id = self.env['sale.order'].search([('origin', 'ilike', origin)])
             if sale_id:
                 sale_line_ids = sale_id.order_line.filtered(lambda sale_line:
                                                            sale_line.product_id.id == product_id.id
