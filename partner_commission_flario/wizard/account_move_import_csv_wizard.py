@@ -50,6 +50,10 @@ class AccountMoveImportCsvWizard(models.TransientModel):
         for line in file_reader:
             invoice_line_cmd = {'sequence': n}
             n += 1
+
+
+            if line['type'] != 'Order':
+                continue
             try:
                 date_time = datetime.strptime(line['date/time'], '%d %b %Y %I:%M:%S %p UTC')
                 origin = line['order id']
@@ -66,6 +70,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                 critical_error = True
                 break
                 #continue
+
 
             invoice_line_cmd.update({'price_unit': price_unit, 'quantity': quantity, 'commission': move.currency_id.round(line_comission),})
 
