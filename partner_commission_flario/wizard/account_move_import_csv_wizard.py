@@ -12,7 +12,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
     _name = 'account.move.import.csv.wizard'
     _description = 'Import CSV'
 
-    file = fields.Binary(string="File", required=True, filters='*.csv')
+    file = fields.Binary(string="File", required=True)
     message = fields.Text('Information')
 
     def action_import_csv(self):
@@ -46,11 +46,11 @@ class AccountMoveImportCsvWizard(models.TransientModel):
         invoice_line_ids_commands =[]
         n = 0
         critical_error = False
-        #total_comission = 0
+        total_selling_fees = 0
+        total_fba_fees = 0
         for line in file_reader:
             invoice_line_cmd = {'sequence': n}
             n += 1
-
 
             if line['type'] != 'Order':
                 continue
@@ -59,10 +59,11 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                 origin = line['order id']
                 default_code = line['sku']
                 price_unit = float(line['product sales'])
-                total = float(line['total'])
+                # total = float(line['total'])
+                # line_comission = price_unit - total
                 quantity = float(line['quantity'])
-                #line_comission = float(line['selling fees']) + float(line['fba fees'])
-                line_comission = price_unit-total
+                selling_fees = float(line['selling fees'])
+                fba_fees = float(line['fba fees'])
             except Exception as e:
                 message_parts.append(_("<b>Line #%d</b>. "
                                        "Failed to read: %s", n, e.args[0]))
@@ -70,9 +71,6 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                 critical_error = True
                 break
                 #continue
-
-
-            invoice_line_cmd.update({'price_unit': price_unit, 'quantity': quantity, 'commission': move.currency_id.round(line_comission),})
 
             product_id = self.env['product.product'].search([('default_code', '=', default_code)])
             if not product_id:
@@ -83,9 +81,10 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                 break
                 #continue
 
-            invoice_line_cmd['product_id'] = product_id.id
+            total_selling_fees += selling_fees
+            total_fba_fees += fba_fees
 
-            #total_comission += line_comission
+            invoice_line_cmd.update({'price_unit': price_unit, 'quantity': quantity, 'product_id': product_id.id})
 
             sale_id = self.env['sale.order'].search([('origin', 'ilike', origin)])
             if sale_id:
@@ -102,20 +101,52 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                 message_parts.append(_("<b>Line #%d</b>. "
                                        "Not found Sale order with Source Document %s", n, origin))
 
-            #account_move.invoice_line_ids += self.env['account.move.line'].new(invoice_line_cmd)
             invoice_line_ids_commands.append((0, 0, invoice_line_cmd))
+
+        fba_fees_account_code = '201003'
+        selling_fees_account_code = '500001'
+        company_id = self.env.company.id or self.company_id.id
+        fba_fees_account_id = self.env['account.account'].search(
+            [('code', '=', fba_fees_account_code), ('company_id', '=', company_id)], limit=1)
+        selling_fees_account_id = self.env['account.account'].search(
+            [('code', '=', selling_fees_account_code), ('company_id', '=', company_id)], limit=1)
+
+        if fba_fees_account_id:
+            invoice_line_fba_fees = {
+                'name': _('Fba Fees'),
+                'account_id': fba_fees_account_id.id,
+                'price_unit': total_fba_fees,
+                'tax_ids': [],
+                'tax_line_id': False,
+            }
+            invoice_line_ids_commands.append((0, 0, invoice_line_fba_fees))
+        else:
+            message_parts.append(_("Not found account with code %s. Company: %s", fba_fees_account_code, company_id.name))
+            message_parts.append(_("<b>Import stopped!</b>"))
+            critical_error = True
+
+        if selling_fees_account_id:
+            invoice_line_selling_fees = {
+                'name': _('Selling Fees'),
+                'account_id': selling_fees_account_id.id,
+                'price_unit': total_selling_fees,
+                'tax_ids': [],
+                'tax_line_id': False,
+            }
+            invoice_line_ids_commands.append((0, 0, invoice_line_selling_fees))
+        else:
+            message_parts.append(_("Not found account with code %s. Company: %s", selling_fees_account_code, company_id.name))
+            message_parts.append(_("<b>Import stopped!</b>"))
+            critical_error = True
 
         if not critical_error:
             move.invoice_line_ids.unlink()
-            move.write({'invoice_line_ids': invoice_line_ids_commands})
-            # move.action_post()
-            # move._make_commission(move.currency_id.round(total_comission))
+            move.write({'line_ids': invoice_line_ids_commands})
 
         self.message = 'Done<br /><br />'
         self.message += '<br />'.join(message_parts)
 
         return self.open_dialog(title='Import result')
-
         # return {'type': 'ir.actions.act_window_close'}
 
 
