@@ -105,11 +105,11 @@ class AccountMoveImportCsvWizard(models.TransientModel):
 
         fba_fees_account_code = '201003'
         selling_fees_account_code = '500001'
-        company_id = self.env.company.id or self.company_id.id
+        company_id = self.env.company or move.company_id
         fba_fees_account_id = self.env['account.account'].search(
-            [('code', '=', fba_fees_account_code), ('company_id', '=', company_id)], limit=1)
+            [('code', '=', fba_fees_account_code), ('company_id', '=', company_id.id)], limit=1)
         selling_fees_account_id = self.env['account.account'].search(
-            [('code', '=', selling_fees_account_code), ('company_id', '=', company_id)], limit=1)
+            [('code', '=', selling_fees_account_code), ('company_id', '=', company_id.id)], limit=1)
 
         if fba_fees_account_id:
             invoice_line_fba_fees = {
@@ -121,7 +121,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
             }
             invoice_line_ids_commands.append((0, 0, invoice_line_fba_fees))
         else:
-            message_parts.append(_("Not found account with code %s. Company: %s", fba_fees_account_code, company_id.name))
+            message_parts.append(_("%s - not found account with code '%s'", company_id.name, fba_fees_account_code))
             message_parts.append(_("<b>Import stopped!</b>"))
             critical_error = True
 
@@ -135,7 +135,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
             }
             invoice_line_ids_commands.append((0, 0, invoice_line_selling_fees))
         else:
-            message_parts.append(_("Not found account with code %s. Company: %s", selling_fees_account_code, company_id.name))
+            message_parts.append(_("%s - not found account with code '%s'", company_id.name, selling_fees_account_code))
             message_parts.append(_("<b>Import stopped!</b>"))
             critical_error = True
 
