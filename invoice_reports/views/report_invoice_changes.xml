@@ -39,30 +39,29 @@
 
     <template id="report_invoice_external_layout_standard" inherit_id="web.external_layout_standard">
         <xpath expr="//span[@t-if='company.company_details']" position="replace">
-            <span t-if="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
-<!--            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>-->
-<!--            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>-->
+            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
+            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
         </xpath>
     </template>
 
     <template id="report_invoice_external_layout_bold" inherit_id="web.external_layout_bold">
         <xpath expr="//span[@t-if='company.company_details']" position="replace">
             <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
-            <span t-else="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
         </xpath>
     </template>
 
     <template id="report_invoice_external_layout_boxed" inherit_id="web.external_layout_boxed">
         <xpath expr="//span[@t-if='company.company_details']" position="replace">
             <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
-            <span t-else="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
         </xpath>
     </template>
 
     <template id="report_invoice_external_layout_striped" inherit_id="web.external_layout_striped">
         <xpath expr="//span[@t-if='company.company_details']" position="replace">
             <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
-            <span t-else="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
         </xpath>
     </template>
 
