@@ -26,4 +26,65 @@
             </div>
         </xpath>
     </template>
+
+
+
+
+
+
+
+
+
+
+
+    <template id="report_invoice_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//span[@t-if='company.company_details']" position="replace">
+            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
+            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//span[@t-if='company.company_details']" position="replace">
+            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
+            <span t-else="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//span[@t-if='company.company_details']" position="replace">
+            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
+            <span t-else="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//span[@t-if='company.company_details']" position="replace">
+            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
+            <span t-else="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_company_detail">
+        <t t-if="o">
+            <t t-set="partner_bank_id" t-value="o.partner_bank_id"/>
+            <div t-if="partner_bank_id.acc_number">
+                <t t-if="partner_bank_id.acc_type == 'iban'">IBAN</t>
+                <t t-else="">Account No</t>:
+                <span t-field="partner_bank_id.acc_number"/>
+            </div>
+            <div t-if="partner_bank_id.acc_number2">
+                <t t-if="partner_bank_id.acc_type2 == 'iban'">IBAN</t>
+                <t t-else="">Account No</t>:
+                <span t-field="partner_bank_id.acc_number2"/>
+            </div>
+            <div t-if="partner_bank_id.bank_id.bic">SWIFT: <span t-field="partner_bank_id.bank_id.bic"/></div>
+            <div t-if="partner_bank_id.bank_id.name"><span t-field="partner_bank_id.bank_id.name"/></div>
+            <div t-if="o.company_id.vat">VAT:
+                <span t-field="o.company_id.vat"/></div>
+            <div t-if="o.company_id.company_registry">Company ID:
+                <span t-field="o.company_id.company_registry"/></div>
+        </t>
+    </template>
+
 </odoo>
