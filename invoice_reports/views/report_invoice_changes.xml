@@ -39,29 +39,37 @@
 
     <template id="report_invoice_external_layout_standard" inherit_id="web.external_layout_standard">
         <xpath expr="//span[@t-if='company.company_details']" position="replace">
-            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
-            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+            <span t-if="o and 'partner_bank_id' in o.fields_get()">
+                <t t-call="invoice_reports.report_invoice_company_detail"/>
+            </span>
+            <span t-elif="company.company_details" t-field="company.company_details"></span>
         </xpath>
     </template>
 
     <template id="report_invoice_external_layout_bold" inherit_id="web.external_layout_bold">
         <xpath expr="//span[@t-if='company.company_details']" position="replace">
-            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
-            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+            <span t-if="o and 'partner_bank_id' in o.fields_get()">
+                <t t-call="invoice_reports.report_invoice_company_detail"/>
+            </span>
+            <span t-elif="company.company_details" t-field="company.company_details"></span>
         </xpath>
     </template>
 
     <template id="report_invoice_external_layout_boxed" inherit_id="web.external_layout_boxed">
         <xpath expr="//span[@t-if='company.company_details']" position="replace">
-            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
-            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+            <span t-if="o and 'partner_bank_id' in o.fields_get()">
+                <t t-call="invoice_reports.report_invoice_company_detail"/>
+            </span>
+            <span t-elif="company.company_details" t-field="company.company_details"></span>
         </xpath>
     </template>
 
     <template id="report_invoice_external_layout_striped" inherit_id="web.external_layout_striped">
         <xpath expr="//span[@t-if='company.company_details']" position="replace">
-            <span t-if="company.company_details != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'" t-field="company.company_details"></span>
-            <span t-elif="o"><t t-call="invoice_reports.report_invoice_company_detail"/></span>
+           <span t-if="o and 'partner_bank_id' in o.fields_get()">
+                <t t-call="invoice_reports.report_invoice_company_detail"/>
+            </span>
+            <span t-elif="company.company_details" t-field="company.company_details"></span>
         </xpath>
     </template>
 
@@ -77,8 +85,10 @@
             <t t-else="">Account No</t>:
             <span t-field="partner_bank_id.acc_number2"/>
         </div>
-        <div t-if="partner_bank_id.bank_id.bic">SWIFT: <span t-field="partner_bank_id.bank_id.bic"/></div>
-        <div t-if="partner_bank_id.bank_id.name"><span t-field="partner_bank_id.bank_id.name"/></div>
+        <div t-if="partner_bank_id.bank_id.bic">SWIFT:
+            <span t-field="partner_bank_id.bank_id.bic"/></div>
+        <div t-if="partner_bank_id.bank_id.name">
+            <span t-field="partner_bank_id.bank_id.name"/></div>
         <div t-if="o.company_id.vat">VAT:
             <span t-field="o.company_id.vat"/></div>
         <div t-if="o.company_id.company_registry">Company ID:
