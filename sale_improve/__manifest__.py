@@ -8,6 +8,7 @@
     "depends": ["sale"],
     'data': [
         'report/ir_actions_report_templates.xml',
+        'views/sale_order_views.xml',
     ],
     'license': 'LGPL-3',
 }
