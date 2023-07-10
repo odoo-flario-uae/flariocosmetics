@@ -2,11 +2,10 @@
 from odoo import http
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-import telebot # Import telegram
+import telebot  # Import telegram
 
-TOKEN = '5867719962:AAHz_CUbJS5lwNptB-Ryiz8YD6qYqsKIeBI' # Ponemos nuestro Token generado con el @BotFather
+TOKEN = '5867719962:AAHz_CUbJS5lwNptB-Ryiz8YD6qYqsKIeBI'
 tb = telebot.TeleBot(TOKEN)
-
 
 
 class WebsiteInherit(WebsiteSale):
@@ -16,7 +15,7 @@ class WebsiteInherit(WebsiteSale):
 
     def msgToTg(self, order, subject, name="", phone="", email=""):
         method_com_arr = {
-            "wa":"WhatsApp",
+            "wa": "WhatsApp",
             "phone": "phone",
             "email": "email"
         }
@@ -37,17 +36,17 @@ class WebsiteInherit(WebsiteSale):
         tgText = tgText + "Метод оплаты: " + provide_name + "\n"
         tgText = tgText + "\n Товары: " + "\n"
 
-        if(order.order_line):
-            for idx,line in enumerate(order.order_line):
+        if (order.order_line):
+            for idx, line in enumerate(order.order_line):
                 product = line.product_id
                 product_name = product.name
                 product_code = ''
-                if(type(product.code) == bool):
+                if (type(product.code) == bool):
                     product_code = "не указан артикул"
                 else:
                     product_code = product.code
 
-                tgText = tgText + str(idx+1) + " " + str(product_name) + "(" + str(product_code) + ")" + "\n"
+                tgText = tgText + str(idx + 1) + " " + str(product_name) + "(" + str(product_code) + ")" + "\n"
         return tgText
 
     @http.route(['/fastbuy/form/submit'], type='http', auth="public", website=True)
@@ -63,11 +62,12 @@ class WebsiteInherit(WebsiteSale):
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def shop_payment_confirmation(self, **post):
         res = super(WebsiteInherit, self).shop_payment_confirmation(**post)
-        sale_order_id = request.session.data.get('sale_last_order_id')
-        order = request.env['sale.order'].sudo().browse(sale_order_id)
+        order = res.qcontext.get('order')
+
         partner_name = order.partner_id.name
         partner_phone = order.partner_id.phone
         partner_email = order.partner_id.email
-        tgMessage = self.msgToTg(order, "Заказ (авт)", partner_name, partner_phone, partner_email)
-        tb.send_message('-648259220', tgMessage)
+        message = self.msgToTg(order, "Order (auto)", partner_name, partner_phone, partner_email)
+        tb.send_message('-648259220', message)
+
         return res
