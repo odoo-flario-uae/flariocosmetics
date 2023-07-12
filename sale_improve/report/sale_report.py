@@ -16,6 +16,6 @@ class SaleReport(models.Model):
         res['cost_price'] = f"""CASE WHEN l.product_id IS NOT NULL THEN SUM(l.purchase_price
                 * {self._case_value_or_one('s.currency_rate')}
                 * {self._case_value_or_one('currency_table.rate')}
-                * l.product_uom_qty / u.factor * u2.factor) ELSE 0
+                * l.product_uom_qty)  ELSE 0
             END """
         return res
