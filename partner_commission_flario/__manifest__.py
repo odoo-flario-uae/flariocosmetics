@@ -15,7 +15,7 @@ This module allows to configure commissions for resellers.
     ],
     'data': [
         'data/data.xml',
-        'security/purchase_security.xml',
+        'security/commission_security.xml',
         'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'views/purchase_order_views.xml',

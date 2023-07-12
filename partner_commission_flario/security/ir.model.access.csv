@@ -1,5 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_purchase_order_commission_user,purchase.order.commission.user,purchase.model_purchase_order,group_commission_user,1,0,0,0
-access_purchase_order_line_commission_user,purchase.order.line.commission.user,purchase.model_purchase_order_line,group_commission_user,1,0,0,0
 access_account_move_import_csv,account_move_import_csv,model_account_move_import_csv_wizard,group_commission_user,1,1,1,1
 
