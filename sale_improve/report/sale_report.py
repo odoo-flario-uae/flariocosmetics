@@ -14,7 +14,7 @@ class SaleReport(models.Model):
     def _select_additional_fields(self):
         res = super()._select_additional_fields()
         res['cost_price'] = f"""CASE WHEN l.product_id IS NOT NULL THEN SUM(l.purchase_price
-                * {self._case_value_or_one('s.currency_rate')}
+                / {self._case_value_or_one('s.currency_rate')}
                 * {self._case_value_or_one('currency_table.rate')}
                 * l.product_uom_qty)  ELSE 0
             END """
