@@ -58,7 +58,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                 date_time = datetime.strptime(line['date/time'], '%d %b %Y %I:%M:%S %p UTC')
                 origin = line['order id']
                 default_code = line['sku']
-                price_unit = float(line['product sales'] / line['quantity'])
+                price_unit = float(line['product sales']) / float(line['quantity'])
                 # total = float(line['total'])
                 # line_comission = price_unit - total
                 quantity = float(line['quantity'])
