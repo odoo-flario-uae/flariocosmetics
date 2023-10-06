@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="send_coupons_success" name="Amazon coupons Form Successfully Submitted">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="col-md-12 mt-5">
+                        <div class="alert alert-success">
+                            Your coupon code send to email.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="send_coupons_form_error">
+
+    </template>
+
+    <template id="send_coupons_form" name="Amazon coupons form">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+            </div>
+            <div class="container">
+                <div class="mt-5 mb-5">
+                    <div t-if="message" class="alert alert-danger mt-5" t-esc="message" role="alert"></div>
+                    <div class="col-md-12" id="coupons_form">
+                        <form method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="form-group mt-2">
+                                <label for="name">Name*:</label>
+                                <input type="text" class="form-control" name="name" id="name" required="true" />
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="email">Email address*:</label>
+                                <input type="email" class="form-control" name="email"
+                                       id="email" required="true" />
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="name">Phone*:</label>
+                                <input type="text" class="form-control" name="phone"
+                                       id="phone" required="true" />
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Get coupon</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--    Comission view-->
+<!--    <record id="view_account_move_line_inherit_commission" model="ir.ui.view">-->
+<!--        <field name="name">account.move.line.inherit.commission</field>-->
+<!--        <field name="model">account.move</field>-->
+<!--        <field name="inherit_id" ref="account.view_move_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--           <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='price_subtotal']" position="before">-->
+<!--                <field name="commission" widget='monetary' optional="hide"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+<!--    <record id="account_move_form_inherit_partner_commission" model="ir.ui.view">-->
+<!--        <field name="name">account.move.form.partner.commission</field>-->
+<!--        <field name="model">account.move</field>-->
+<!--        <field name="inherit_id" ref="account.view_move_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <field name="amount_residual" position="after">-->
+<!--                <field name="commission" widget='monetary'/>-->
+<!--            </field>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+</odoo>
