@@ -11,9 +11,9 @@ class SendCoupons(http.Controller):
         try:
             if post:
                 if post.get('email'):
-                    partner_objs = request.env['res.partner'].sudo().search([('email', '=', post.get('email'))])
+                    partner_objs = request.env['res.partner'].sudo().search([('email', '=', post.get('email'))], limit=1)
                     partner_id = partner_objs.id if partner_objs else False
-                    loyalty_card = request.env['loyalty.card'].sudo().search([('partner_id', '=', partner_id)]) if partner_id else False
+                    loyalty_card = request.env['loyalty.card'].sudo().search([('partner_id', '=', partner_id)], limit=1) if partner_id else False
 
                     if partner_objs and loyalty_card:
                         return request.render("send_coupons.send_coupons_form", {
