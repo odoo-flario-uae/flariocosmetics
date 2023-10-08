@@ -10,7 +10,8 @@
             </div>
             <div class="container">
                 <div class="mt-5 mb-5">
-                    <div t-if="message" class="alert alert-danger mt-5" t-esc="message" role="alert"></div>
+                    <div t-if="not success" class="alert alert-danger mt-5" t-esc="message" role="alert"></div>
+                    <div t-if="success" class="alert alert-success" t-esc="message" role="alert"></div>
                     <div class="col-md-12" id="coupons_form">
                         <form method="post">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>

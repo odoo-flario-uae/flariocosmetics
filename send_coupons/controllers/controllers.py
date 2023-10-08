@@ -11,12 +11,13 @@ class SendCoupons(http.Controller):
         try:
             if post:
                 if post.get('email'):
-                    partner_objs = request.env['res.partner'].search([('email', '=', post.get('email'))])
+                    partner_objs = request.env['res.partner'].sudo().search([('email', '=', post.get('email'))])
                     partner_id = partner_objs.id if partner_objs else False
-                    loyalty_card = request.env['loyalty.card'].search([('partner_id', '=', partner_id)]) if partner_id else False
+                    loyalty_card = request.env['loyalty.card'].sudo().search([('partner_id', '=', partner_id)]) if partner_id else False
 
                     if partner_objs and loyalty_card:
                         return request.render("send_coupons.send_coupons_form", {
+                            'success': False,
                             'message': 'Customer with current email exist and code was send to your Email.',
                         })
                     else:
@@ -26,13 +27,13 @@ class SendCoupons(http.Controller):
                             'phone': post.get('phone')
                         })
 
-                        loyalty_program = request.env['loyalty.program'].search([('for_amazon', '=', True)], limit=1)
+                        loyalty_program = request.env['loyalty.program'].sudo().search([('for_amazon', '=', True)], limit=1)
                         if not loyalty_program:
                             tb.send_message('-648259220', "Не найдены купоны для клиентов Амазон")
                         if loyalty_program.coupon_count - loyalty_program.order_count <= 5:
                             tb.send_message('-648259220', "Заканчиваются купоны для Амазона")
 
-                        loyalty_card = request.env['loyalty.card'].search(
+                        loyalty_card = request.env['loyalty.card'].sudo().search(
                             [('partner_id', '=', False), ('program_id', '=', loyalty_program.id)], limit=1)
                         loyalty_card.partner_id = partner.id
                         template = loyalty_card.env.ref('loyalty.mail_template_loyalty_card')
@@ -40,17 +41,18 @@ class SendCoupons(http.Controller):
                         template.send_mail(loyalty_card.id, force_send=True)
 
                         return request.render("send_coupons.send_coupons_form", {
+                            'success': True,
                             'message': 'Coupon code has been send to your Email'
                         })
             else:
                 return request.render("send_coupons.send_coupons_form", {
+                    'success': False,
                     'message': '',
                 })
         except (RuntimeError, TypeError, NameError) as err:
             print(f"Unexpected {err=}, {type(err)=}")
             return request.render("send_coupons.send_coupons_form", {
+                'success': False,
                 'message': 'Something went wrong',
             })
             pass
-
-
