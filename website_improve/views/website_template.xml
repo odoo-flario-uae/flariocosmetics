@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="template_header_default" inherit_id="website_sale.template_header_default">
+    <template id="template_header_image" inherit_id="website_sale.template_header_image">
         <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="replace">
         </xpath>
-        <xpath expr="//t[@t-call='website.navbar_toggler']" position="after">
+        <xpath expr="//div[@id='top_menu_collapse']" position="after">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item mx-lg-3'"/>
                 <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+    <template id="header_wishlist_link" inherit_id="website_sale_wishlist.header_wishlist_link">
+        <xpath expr="." position="replace">
+            <t name="Header Wishlist Link" t-name="website_sale_wishlist.header_wishlist_link">
+                <t t-nocache="The wishlist may vary and depends on the user." t-nocache-_icon="_icon" t-nocache-_item_class="_item_class" t-nocache-_link_class="_link_class" t-nocache-_text="_text">
+                    <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
+                    <t t-set="show_wishes" t-value="True"/>
+                    <div t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
+                        <a href="/shop/wishlist" t-attf-class="#{_link_class}">
+                            <i t-if="_icon" class="fa fa-1x fa-heart"/>
+                            <span t-if="_text">Wishlist</span>
+                            <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge text-bg-primary"/>
+                        </a>
+                    </div>
+                </t>
             </t>
         </xpath>
     </template>
