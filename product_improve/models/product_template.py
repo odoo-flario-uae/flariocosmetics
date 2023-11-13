@@ -4,6 +4,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
     extra_directions = fields.Html("Directions")
     extra_ingredients = fields.Html("Ingredients")
+    amazon_link = fields.Char(string="Product's amazon link", default="")
 
     #### BEGIN Могилевец 12.12.2022  ####
     weight_brutto = fields.Float(string="Weight brutto", digits='Stock Weight',

@@ -4,6 +4,9 @@ from odoo.http import request
 import telebot  # Import telegram
 TOKEN = '5867719962:AAHz_CUbJS5lwNptB-Ryiz8YD6qYqsKIeBI'
 tb = telebot.TeleBot(TOKEN)
+# TODO
+# 1. убрать создание кастомеров
+# 2. выдавать права на портал
 
 class SendCoupons(http.Controller):
     @http.route('/amazon_coupons/', type='http', auth="public", website=True)

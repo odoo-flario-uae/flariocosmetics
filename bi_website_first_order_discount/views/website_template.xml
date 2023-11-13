@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="disc_popup" name="Discount Popup Model">
+
+        <div class="s_popup" data-vcss="001">
+            <div class="modal fade s_popup_middle" style="background-color: var(--black-50) !important;"
+                 data-focus="false"
+                 data-bs-backdrop="true" tabindex="-1" role="dialog">
+                <div class="modal-dialog d-flex">
+                    <div class="modal-content oe_structure">
+                        <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" data-bs-dismiss="modal"
+                             aria-label="Close">&#215;
+                        </div>
+                        <section class="pt48 pb48">
+                            <div class="container">
+                                <div class="row s_nb_column_fixed">
+                                    <div class="col-lg-10 offset-lg-1 text-center o_cc o_cc1 jumbotron pt48 pb48">
+                                        <t t-if="notify_popup_custom">
+                                            <h1 class="text-center">Welcome To Your Company</h1>
+                                            <h3 class="text-center">Get
+                                                <t t-if="discount">
+                                                    <span t-esc='discount'/>
+                                                    <span>%</span>
+                                                </t>
+                                                Discount on your first order.
+                                            </h3>
+                                        </t>
+                                        <t t-else="">
+                                            <h3 class="text-center">
+                                                <p t-raw='discount_msg'/>
+                                            </h3>
+                                        </t>
+                                        <a href="/web/signup" class="btn btn-primary mb-2" data-bs-dismiss="modal">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </template>
+
+
+</odoo>

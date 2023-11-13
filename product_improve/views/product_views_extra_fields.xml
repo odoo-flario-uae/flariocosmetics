@@ -11,7 +11,10 @@
                     </group>
                     <group string="Website ingredients" name="ingredients">
                         <field colspan="2" name="extra_ingredients"/>
-                    </group>                
+                    </group>
+                    <group string="Amazon link" name="amazon_link">
+                        <field colspan="2" widget="url" name="amazon_link"/>
+                    </group>
             </xpath>
             <!-- Андросов 30.11.2022 -->
         </field>

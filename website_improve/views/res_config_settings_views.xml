@@ -18,6 +18,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="telegram_token">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <label string="Telegram bot token" for="telegram_token"/>
+                        <div class="text-muted">Use this for notify about users and orders to Telegram</div>
+                        <field name="telegram_token" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="telegram_chat_id">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <label string="Telegram char ID" for="telegram_chat_id"/>
+                        <div class="text-muted">Clarify ID of chat or group</div>
+                        <field name="telegram_chat_id" />
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>
