@@ -2,8 +2,8 @@ from odoo import models, fields, api
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
-    extra_directions = fields.Html("Directions")
-    extra_ingredients = fields.Html("Ingredients")
+    extra_directions = fields.Html("Directions", translate=True, store=True, readonly=False)
+    extra_ingredients = fields.Html(string="Ingredients", translate=True, store=True, readonly=False)
     amazon_link = fields.Char(string="Product's amazon link", default="")
 
     #### BEGIN Могилевец 12.12.2022  ####
