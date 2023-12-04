@@ -24,6 +24,13 @@
     </template>
 
     <template id="website_sale_product_inherit" inherit_id="website_sale.product" name="product accordions">
+        <xpath expr="//div[@id='product_details']/h1" position="after">
+            <t t-if="product.default_code">
+                <div class="fs-6 website_sale_product_default_code">
+                    <span>Article: </span><span t-field="product.default_code"/>
+                </div>
+            </t>
+        </xpath>
         <xpath expr="//div[@id='add_to_cart_wrap']" position="attributes">
             <attribute name="t-attf-class">{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-2</attribute>
         </xpath>
