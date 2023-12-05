@@ -8,6 +8,8 @@ class Website(models.Model):
     _inherit = "website"
 
     fast_puchasing = fields.Boolean(string="Fast purchasing for website")
+    telegram_token = fields.Char(string="Sale telegram token")
+    telegram_chat_id = fields.Char(string="Sale telegram chat id")
     google_gtm = fields.Char('Google GTM')
 
     def get_pricelist_available(self, show_visible=False):

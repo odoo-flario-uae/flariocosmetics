@@ -4,14 +4,38 @@ from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 import telebot  # Import telegram
 
-TOKEN = '5867719962:AAHz_CUbJS5lwNptB-Ryiz8YD6qYqsKIeBI'
-tb = telebot.TeleBot(TOKEN)
-
-
+# if request.env.user.id == request.env.ref('base.public_user').id:
+#     print('public user defined')
 class WebsiteInherit(WebsiteSale):
+
+    @staticmethod
+    def setupTb():
+        token = request.env['ir.config_parameter'].sudo().get_param('website_improve.telegram_token')
+        tb = telebot.TeleBot(token)
+
+        return tb
+
     @staticmethod
     def validateParams(p1, p2):
         return p1 if p1 != '' else p2
+
+    def _get_mandatory_fields_billing(self, country_id=False):
+        req = ["name", "street", "city", "country_id"]
+        if country_id:
+            country = request.env['res.country'].browse(country_id)
+            if country.state_required:
+                req += ['state_id']
+
+        return req
+
+    def _get_mandatory_fields_shipping(self, country_id=False):
+        req = ["name", "street", "city", "country_id"]
+        if country_id:
+            country = request.env['res.country'].browse(country_id)
+            if country.state_required:
+                req += ['state_id']
+
+        return req
 
     def msgToTg(self, order, subject, name="", phone="", email=""):
         method_com_arr = {
@@ -51,11 +75,13 @@ class WebsiteInherit(WebsiteSale):
 
     @http.route(['/fastbuy/form/submit'], type='http', auth="public", website=True)
     def one_click_buy(self, **post):
-        sale_order_id = request.session.data.get('sale_order_id')
+        chat_id = request.env['ir.config_parameter'].sudo().get_param('website_improve.telegram_chat_id')
+        tb = self.setupTb()
+        sale_order_id = request.session.get('sale_order_id')
         order = request.env['sale.order'].sudo().browse(sale_order_id)
         tgMessage = self.msgToTg(order, "Быстрый заказ", post.get("name"), post.get("phone"), post.get("email"))
-        tb.send_message('-648259220', tgMessage)
-        order.with_context().action_confirm()
+        tb.send_message(chat_id, tgMessage)
+        order.with_context(send_email=True)
         request.website.sale_reset()
         return request.redirect('/thank-you')
 
@@ -63,11 +89,13 @@ class WebsiteInherit(WebsiteSale):
     def shop_payment_confirmation(self, **post):
         res = super(WebsiteInherit, self).shop_payment_confirmation(**post)
         order = res.qcontext.get('order')
+        chat_id = request.env['ir.config_parameter'].sudo().get_param('website_improve.telegram_chat_id')
+        tb = self.setupTb()
 
         partner_name = order.partner_id.name
         partner_phone = order.partner_id.phone
         partner_email = order.partner_id.email
         message = self.msgToTg(order, "Order (auto)", partner_name, partner_phone, partner_email)
-        tb.send_message('-648259220', message)
+        tb.send_message(chat_id, message)
 
         return res
