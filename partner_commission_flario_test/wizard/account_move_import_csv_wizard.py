@@ -57,7 +57,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
             if row['amount-description'] == 'Principal':
                 product_info['price'] += float(row['amount'])
             else:
-                product_info['taxes'] = round(product_info['taxes'] + float(row['amount']), 2)
+                product_info['fees'] = round(product_info['fees'] + float(row['amount']), 2)
 
             # Для типа транзакции 'Refund' устанавливаем количество равным 0
             if row['transaction-type'] == 'Refund':
@@ -106,6 +106,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                                                    "Not found Sale order with Source Document %s", n, line['order_id']))
 
                         invoice_line_ids_commands.append((0, 0, invoice_line_cmd))
+
 
                 ecommerce_fees = '40072'
                 company_id = self.env.company or move.company_id
