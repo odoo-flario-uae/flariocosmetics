@@ -1,7 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models, fields
 
 
 class Website(models.Model):
-    _inherit = 'website'
+    _inherit = "website"
