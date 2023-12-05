@@ -1,7 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="product_accordion" inherit_id="website_sale.product" name="product accordions">
+    <template id="payment_delivery_methods_inherit" inherit_id="website_sale_delivery.payment_delivery_methods">
+        <xpath expr="//span" position="replace">
+            <t t-if="delivery.fee_delivery and delivery.fee_delivery != ''">
+                <span t-attf-class="#{badge_class}" t-esc="delivery.fee_delivery"></span>
+            </t>
+            <t t-else="">
+                <span t-attf-class="#{badge_class} o_wsale_delivery_badge_price">Select to compute delivery rate</span>
+            </t>
+        </xpath>
+    </template>
 
+    <template id="address_inherit" inherit_id="website_sale.address">
+      <xpath expr="//label[@for='street']" position="replace">
+        <label class="col-form-label" for="street">Building name</label>
+      </xpath>
+      <xpath expr="//label[@for='street2']" position="replace">
+        <label class="col-form-label" for="street">Apartment</label>
+      </xpath>
+      <xpath expr="//input[@id='shipping_use_same']" position="replace">
+        <input type="checkbox" id='shipping_use_same' class="mr8 mb-3" name='use_same' value="1" checked='checked'/>Ship to the same address
+      </xpath>
+    </template>
+
+    <template id="website_sale_product_inherit" inherit_id="website_sale.product" name="product accordions">
+        <xpath expr="//div[@id='product_details']/h1" position="after">
+            <t t-if="product.default_code">
+                <div class="fs-6 website_sale_product_default_code">
+                    <span>Article: </span><span t-field="product.default_code"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="attributes">
+            <attribute name="t-attf-class">{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-2</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='single_value_attributes']/tr" position="replace">
+            <t t-if="attribute.visibility != 'hidden'">
+                <tr>
+                    <td>
+                        <span t-field="attribute.name"/>:
+                        <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
+                            <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
+                        </t>
+                    </td>
+                </tr>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='product_option_block']" position="before">
+            <t t-if="product.amazon_link">
+                <div class="mb-2">
+                    <a role="button" id="amazon_link" t-att-href="product.amazon_link" class="btn btn-primary flex-grow-1 btn-lg">
+                        <i class="fa fa-brands fa-amazon"></i>
+                        <span>BUY ON AMAZON</span>
+                    </a>
+                </div>
+            </t>
+        </xpath>
         <xpath expr="//section[@id='product_detail']" position="after">
             <section class="accordions container py-4">
                 <div class="accordion" id="accordionExample">
