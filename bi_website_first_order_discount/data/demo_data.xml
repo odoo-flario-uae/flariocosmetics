@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="first_discount_product" model="product.product">
+            <field name="name">First order discount</field>
+            <field name="categ_id" ref="product.product_category_1"/>
+            <field name="type">service</field>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="standard_price">0.0</field>
+            <field name="description_sale">First order discount for new customers.</field>
+            <field name="company_id" eval="[]"/>
+            <field name="image_1920" type="base64" file="bi_website_first_order_discount/static/src/img/discount.png"/>
+        </record>
+
+    </data>
+</odoo>

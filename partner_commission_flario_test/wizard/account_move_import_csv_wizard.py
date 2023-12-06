@@ -83,14 +83,14 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                         all_fees += product_info['fees']
                         invoice_line_cmd = {'sequence': n}
                         n += 1
-                        product_id = self.sudo().env['product.product'].search([('default_code', '=', sku)],
-                                                                               limit=1)
+                        product_id = self.env['product.product'].search([('default_code', '=', sku)])
+
                         if not product_id:
                             message_parts.append(_("Not found product with sku %s", n, sku))
                             message_parts.append(_("<b>Import stopped!</b>"))
                             critical_error = True
                             break
-                        invoice_line_cmd.update({'price_unit': product_info['price'], 'quantity': product_info['quantity'], 'product_id': product_id})
+                        invoice_line_cmd.update({'price_unit': product_info['price'], 'quantity': product_info['quantity'], 'product_id': product_id.id})
                         sale_id = self.env['sale.order'].search([('origin', 'ilike', line['order_id'])])
                         if sale_id:
                             sale_line_ids = sale_id.order_line.filtered(lambda sale_line:
@@ -110,7 +110,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                         invoice_line_ids_commands.append((0, 0, invoice_line_cmd))
 
 
-                ecommerce_fees = '400067'
+                ecommerce_fees = '400072'
                 company_id = self.env.company or move.company_id
                 fba_fees_account_id = self.env['account.account'].search(
                     [('code', '=', ecommerce_fees), ('company_id', '=', company_id.id)], limit=1)
