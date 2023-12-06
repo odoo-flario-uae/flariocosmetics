@@ -63,7 +63,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
             if row['transaction-type'] == 'Refund':
                 product_info['quantity'] = 0
             else:
-                product_info['quantity'] += float(row['quantity-purchased'])
+                product_info['quantity'] = float(row['quantity-purchased'])
 
             existing_order['products'][row['sku']] = product_info
 
@@ -80,9 +80,11 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                         all_fees += product_info['fees']
                 if line['type'] == 'Order':
                     for sku, product_info in line['products'].items():
+                        all_fees += product_info['fees']
                         invoice_line_cmd = {'sequence': n}
                         n += 1
-                        product_id = self.env['product.product'].search([('default_code', '=', sku)])
+                        product_id = self.sudo().env['product.product'].search([('default_code', '=', sku)],
+                                                                               limit=1)
                         if not product_id:
                             message_parts.append(_("Not found product with sku %s", n, sku))
                             message_parts.append(_("<b>Import stopped!</b>"))
@@ -108,7 +110,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                         invoice_line_ids_commands.append((0, 0, invoice_line_cmd))
 
 
-                ecommerce_fees = '40072'
+                ecommerce_fees = '400067'
                 company_id = self.env.company or move.company_id
                 fba_fees_account_id = self.env['account.account'].search(
                     [('code', '=', ecommerce_fees), ('company_id', '=', company_id.id)], limit=1)
