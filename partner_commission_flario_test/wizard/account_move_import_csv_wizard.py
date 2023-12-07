@@ -54,14 +54,14 @@ class AccountMoveImportCsvWizard(models.TransientModel):
 
             # Добавление информации о продукте
             product_info = existing_order['products'].get(row['sku'], {'price': 0, 'quantity': 0, 'fees': 0})
-            if row['amount-description'] == 'Principal':
+            if row['amount-description'] == 'Principal' and row['transaction-type'] == 'Order':
                 product_info['quantity'] = float(row['quantity-purchased'])
-                product_info['price'] += float(row['amount'])
+                if product_info['quantity'] > 1:
+                    product_info['price'] = float(row['amount']) / product_info['quantity']
+                else:
+                    product_info['price'] = float(row['amount'])
             else:
                 product_info['fees'] = round(product_info['fees'] + float(row['amount']), 2)
-
-            if row['transaction-type'] == 'Refund':
-                product_info['quantity'] = 0
 
             existing_order['products'][row['sku']] = product_info
 
@@ -98,8 +98,8 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                                 #     sale_line_ids: [(<Command.LINK: 4>, 2, 0)]
                             else:
                                 message_parts.append(_("<b>Line #%d</b>. "
-                                                       "Not found product with sku %s in Sale order %s", n,
-                                                       sku, sale_id.name))
+                                                       "Not found product with sku %s in Sale order %s %s %s %s", n,
+                                                       sku, sale_id.name, product_info['quantity'], product_info['price'], product_info['fees']))
                         else:
                             message_parts.append(_("<b>Line #%d</b>. "
                                                    "Not found Sale order with Source Document %s", n, line['order_id']))
