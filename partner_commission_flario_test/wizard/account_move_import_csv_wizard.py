@@ -109,7 +109,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
             for trans in other_transactions:
                 if trans['type'] != 'Current Reserve Amount' and trans['type'] != 'Previous Reserve Amount Balance':
                     all_fees += trans['amount']
-            ecommerce_fees = '400067'
+            ecommerce_fees = '400072'
             company_id = self.env.company or move.company_id
             fba_fees_account_id = self.env['account.account'].search(
                 [('code', '=', ecommerce_fees), ('company_id', '=', company_id.id)], limit=1)
