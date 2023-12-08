@@ -32,113 +32,106 @@ class AccountMoveImportCsvWizard(models.TransientModel):
         data_file = io.StringIO(csv_data.decode("utf-8"))
         data_file.seek(0)
 
-        i = 6
-        while i > 0:
-            next(data_file, None)
-            i -= 1
+        orders = []
+        other_transactions = []
 
-        # csv_reader = csv.reader(data_file, delimiter=',')
-        csv_reader = csv.DictReader(data_file, delimiter=',')
-        file_reader = []
-        file_reader.extend(csv_reader)
+        reader = csv.DictReader(data_file, delimiter='\t')
+        next(reader, None)
+
+        for row in reader:
+            order_id = row['order-id']
+
+            # Обработка для 'other-transaction'
+            if row['transaction-type'] == 'other-transaction' or row['transaction-type'] == 'ServiceFee':
+                other_transactions.append({'type': row['amount-description'], 'amount': float(row['amount'])})
+                continue  # Переход к следующей записи
+
+            # Поиск или создание новой записи заказа
+            existing_order = next((item for item in orders if item['order_id'] == order_id), None)
+            if not existing_order:
+                existing_order = {'order_id': order_id, 'type': row['transaction-type'], 'products': {}}
+                orders.append(existing_order)
+
+            # Добавление информации о продукте
+            product_info = existing_order['products'].get(row['sku'], {'price': 0, 'quantity': 0, 'fees': 0})
+            if row['amount-description'] == 'Principal' and row['transaction-type'] == 'Order':
+                product_info['quantity'] += float(row['quantity-purchased'])
+                product_info['price'] += float(row['amount'])
+                if product_info['quantity'] > 1:
+                    product_info['price'] = product_info['price'] / product_info['quantity']
+
+            else:
+                product_info['fees'] = round(product_info['fees'] + float(row['amount']), 2)
+
+            existing_order['products'][row['sku']] = product_info
 
         message_parts = []
         invoice_line_ids_commands =[]
         n = 0
         critical_error = False
-        total_selling_fees = 0
-        total_fba_fees = 0
-        for line in file_reader:
-            invoice_line_cmd = {'sequence': n}
-            n += 1
+        all_fees = 0
+        try:
+            for line in orders:
+                if line['type'] != 'Order':
+                    for sku, product_info in line['products'].items():
+                        all_fees += product_info['fees']
+                if line['type'] == 'Order':
+                    for sku, product_info in line['products'].items():
+                        all_fees += product_info['fees']
+                        invoice_line_cmd = {'sequence': n}
+                        n += 1
+                        product_id = self.env['product.product'].search([('default_code', '=', sku)])
 
-            if line['type'] != 'Order':
-                continue
-            try:
-                date_time = datetime.strptime(line['date/time'], '%d %b %Y %I:%M:%S %p UTC')
-                origin = line['order id']
-                default_code = line['sku']
-                price_unit = float(line['product sales']) / float(line['quantity'])
-                # total = float(line['total'])
-                # line_comission = price_unit - total
-                quantity = float(line['quantity'])
-                selling_fees = float(line['selling fees'])
-                fba_fees = float(line['fba fees'])
-            except Exception as e:
-                message_parts.append(_("<b>Line #%d</b>. "
-                                       "Failed to read: %s", n, e.args[0]))
-                message_parts.append(_("<b>Import stopped!</b>"))
-                critical_error = True
-                break
-                #continue
+                        if not product_id:
+                            message_parts.append(_("Not found product with sku %s", n, sku))
+                            message_parts.append(_("<b>Import stopped!</b>"))
+                            critical_error = True
+                            break
+                        invoice_line_cmd.update({'price_unit': product_info['price'], 'quantity': product_info['quantity'], 'product_id': product_id.id})
+                        sale_id = self.env['sale.order'].search([('origin', 'ilike', line['order_id'])])
+                        if sale_id:
+                            sale_line_ids = sale_id.order_line.filtered(lambda sale_line:
+                                                                        sale_line.product_id.id == product_id.id
+                                                                        and sale_line.product_uom_qty == product_info['quantity'])
+                            if sale_line_ids:
+                                invoice_line_cmd['sale_line_ids'] = sale_line_ids[:1]
+                                #     sale_line_ids: [(<Command.LINK: 4>, 2, 0)]
+                            else:
+                                message_parts.append(_("<b>Line #%d</b>. "
+                                                       "Not found product with sku %s in Sale order %s %s %s %s", n,
+                                                       sku, sale_id.name, product_info['quantity'], product_info['price'], product_info['fees']))
+                        else:
+                            message_parts.append(_("<b>Line #%d</b>. "
+                                                   "Not found Sale order with Source Document %s", n, line['order_id']))
 
-            product_id = self.env['product.product'].search([('default_code', '=', default_code)])
-            if not product_id:
-                message_parts.append(_("<b>Line #%d</b>. "
-                                       "Not found product with sku %s", n, default_code))
-                message_parts.append(_("<b>Import stopped!</b>"))
-                critical_error = True
-                break
-                #continue
+                        invoice_line_ids_commands.append((0, 0, invoice_line_cmd))
 
-            total_selling_fees += selling_fees
-            total_fba_fees += fba_fees
+            for trans in other_transactions:
+                if trans['type'] != 'Current Reserve Amount' and trans['type'] != 'Previous Reserve Amount Balance':
+                    all_fees += trans['amount']
+            ecommerce_fees = '400072'
+            company_id = self.env.company or move.company_id
+            fba_fees_account_id = self.env['account.account'].search(
+                [('code', '=', ecommerce_fees), ('company_id', '=', company_id.id)], limit=1)
 
-            invoice_line_cmd.update({'price_unit': price_unit, 'quantity': quantity, 'product_id': product_id.id})
-
-            sale_id = self.env['sale.order'].search([('origin', 'ilike', origin)])
-            if sale_id:
-                sale_line_ids = sale_id.order_line.filtered(lambda sale_line:
-                                                           sale_line.product_id.id == product_id.id
-                                                           and sale_line.product_uom_qty == quantity)
-                if sale_line_ids:
-                    invoice_line_cmd['sale_line_ids'] = sale_line_ids[:1]
-                    #     sale_line_ids: [(<Command.LINK: 4>, 2, 0)]
-                else:
-                    message_parts.append(_("<b>Line #%d</b>. "
-                                           "Not found product with sku %s in Sale order %s", n, default_code, sale_id.name))
+            if fba_fees_account_id:
+                invoice_line_fba_fees = {
+                    'name': _('Ecommerce fees'),
+                    'account_id': fba_fees_account_id.id,
+                    'price_unit': all_fees,
+                    'tax_ids': [],
+                    'tax_line_id': False,
+                }
+                invoice_line_ids_commands.append((0, 0, invoice_line_fba_fees))
             else:
-                message_parts.append(_("<b>Line #%d</b>. "
-                                       "Not found Sale order with Source Document %s", n, origin))
-
-            invoice_line_ids_commands.append((0, 0, invoice_line_cmd))
-
-        fba_fees_account_code = '201003'
-        selling_fees_account_code = '500001'
-        company_id = self.env.company or move.company_id
-        fba_fees_account_id = self.env['account.account'].search(
-            [('code', '=', fba_fees_account_code), ('company_id', '=', company_id.id)], limit=1)
-        selling_fees_account_id = self.env['account.account'].search(
-            [('code', '=', selling_fees_account_code), ('company_id', '=', company_id.id)], limit=1)
-
-        if fba_fees_account_id:
-            invoice_line_fba_fees = {
-                'name': _('Fba Fees'),
-                'account_id': fba_fees_account_id.id,
-                'price_unit': total_fba_fees,
-                'tax_ids': [],
-                'tax_line_id': False,
-            }
-            invoice_line_ids_commands.append((0, 0, invoice_line_fba_fees))
-        else:
-            message_parts.append(_("%s - not found account with code '%s'", company_id.name, fba_fees_account_code))
+                message_parts.append(
+                    _("%s - not found account with code '%s'", company_id.name, ecommerce_fees))
+                message_parts.append(_("<b>Import stopped!</b>"))
+                critical_error = True
+        except Exception as e:
+            message_parts.append(_("Failed to check file: %s", e.args[0]))
             message_parts.append(_("<b>Import stopped!</b>"))
             critical_error = True
-
-        if selling_fees_account_id:
-            invoice_line_selling_fees = {
-                'name': _('Selling Fees'),
-                'account_id': selling_fees_account_id.id,
-                'price_unit': total_selling_fees,
-                'tax_ids': [],
-                'tax_line_id': False,
-            }
-            invoice_line_ids_commands.append((0, 0, invoice_line_selling_fees))
-        else:
-            message_parts.append(_("%s - not found account with code '%s'", company_id.name, selling_fees_account_code))
-            message_parts.append(_("<b>Import stopped!</b>"))
-            critical_error = True
-
         if not critical_error:
             move.invoice_line_ids.unlink()
             move.write({'line_ids': invoice_line_ids_commands})
@@ -147,7 +140,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
         self.message += '<br />'.join(message_parts)
 
         return self.open_dialog(title='Import result')
-        # return {'type': 'ir.actions.act_window_close'}
+
 
 
     def open_dialog(self, title):
