@@ -55,11 +55,11 @@ class AccountMoveImportCsvWizard(models.TransientModel):
             # Добавление информации о продукте
             product_info = existing_order['products'].get(row['sku'], {'price': 0, 'quantity': 0, 'fees': 0})
             if row['amount-description'] == 'Principal' and row['transaction-type'] == 'Order':
-                product_info['quantity'] = float(row['quantity-purchased'])
+                product_info['quantity'] += float(row['quantity-purchased'])
+                product_info['price'] += float(row['amount'])
                 if product_info['quantity'] > 1:
-                    product_info['price'] = float(row['amount']) / product_info['quantity']
-                else:
-                    product_info['price'] = float(row['amount'])
+                    product_info['price'] = product_info['price'] / product_info['quantity']
+
             else:
                 product_info['fees'] = round(product_info['fees'] + float(row['amount']), 2)
 
