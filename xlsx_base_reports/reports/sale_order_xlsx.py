@@ -37,9 +37,11 @@ class SaleOrderXlsx(models.AbstractModel):
 
             index = 6
             for record in obj.order_line:
+                if record.product_id.detailed_type != 'product':
+                   continue
                 if record.product_id.count_in_box == 0:
                     raise ValidationError(f"Product with SKU {record.product_id.default_code} is not defined count in box")
                 sheet.write(index, 0, record.product_id.default_code)
                 sheet.write(index, 1, round(record.product_uom_qty / record.product_id.count_in_box), align_center)
-                ++index
+                index += 1
 
