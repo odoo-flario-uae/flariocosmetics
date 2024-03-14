@@ -14,7 +14,18 @@ class AccountMoveImportCsvWizard(models.TransientModel):
 
     file = fields.Binary(string="File", required=True)
     message = fields.Text('Information')
-
+    def parse_date(self, date_str):
+        formats = [
+            '%d %b %Y %I:%M:%S %p UTC',  # Формат 12-часового времени
+            '%d %b %Y %H:%M:%S UTC'       # Формат 24-часового времени без AM/PM
+        ]
+        for fmt in formats:
+            try:
+                return datetime.strptime(date_str, fmt)
+            except ValueError:
+                continue
+        raise ValueError(f"date_str doesn't match any of the supported formats")
+        
     def action_import_csv(self):
         if not self.file:
             raise ValidationError(_("Please Upload CSV File to Import!"))
@@ -54,7 +65,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
             if line['type'] != 'Order':
                 continue
             try:
-                date_time = datetime.strptime(line['date/time'], '%d %b %Y %I:%M:%S %p UTC')
+                date_time = self.parse_date(date_str=line['date/time'])
                 origin = line['order id']
                 default_code = line['sku']
                 price_unit = float(line['product sales']) / float(line['quantity'])
