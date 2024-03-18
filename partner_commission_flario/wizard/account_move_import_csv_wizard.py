@@ -6,7 +6,9 @@ import locale
 from odoo import _, fields, models
 from odoo.exceptions import ValidationError, UserError
 from datetime import datetime
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class AccountMoveImportCsvWizard(models.TransientModel):
     _name = 'account.move.import.csv.wizard'
@@ -14,18 +16,7 @@ class AccountMoveImportCsvWizard(models.TransientModel):
 
     file = fields.Binary(string="File", required=True)
     message = fields.Text('Information')
-    def parse_date(self, date_str):
-        formats = [
-            '%d %b %Y %I:%M:%S %p UTC',  # Формат 12-часового времени
-            '%d %b %Y %H:%M:%S UTC'       # Формат 24-часового времени без AM/PM
-        ]
-        for fmt in formats:
-            try:
-                return datetime.strptime(date_str, fmt)
-            except ValueError:
-                continue
-        raise ValueError(f"date_str doesn't match any of the supported formats")
-        
+
     def action_import_csv(self):
         if not self.file:
             raise ValidationError(_("Please Upload CSV File to Import!"))
@@ -42,13 +33,35 @@ class AccountMoveImportCsvWizard(models.TransientModel):
         csv_data = base64.b64decode(self.file)
         data_file = io.StringIO(csv_data.decode("utf-8"))
         data_file.seek(0)
-
-        i = 6
-        while i > 0:
+        
+        # Пропускаем первую строку с заголовками
+        header_line = next(data_file)
+    
+        # Чтение второй строки для определения применяемого налога
+        second_line = next(data_file).lower()  # Приводим строку к нижнему регистру для упрощения поиска
+        vat_tax = self.env['account.tax'].search([('amount', '=', 5), ('type_tax_use', '=', 'sale')], limit=1)
+        
+        # Проверяем наличие валюты и устанавливаем соответствующий налог
+        apply_tax = True
+        if 'gbp' in second_line or 'usd' in second_line:
+            apply_tax = False
+            
+        data_file.seek(0)
+        start_from_line = 0
+        for index, line in enumerate(data_file):
+            if "sku" in line.lower():
+                start_from_line = index
+                break
+    
+        # Если не нашли "sku", выводим сообщение об ошибке
+        if start_from_line == 0:
+            raise UserError(_("The CSV file does not contain a 'sku' header."))
+            
+        # Сбрасываем указатель файла и пропускаем строки до найденной с "sku"
+        data_file.seek(0)
+        for item in range(start_from_line):
             next(data_file, None)
-            i -= 1
 
-        # csv_reader = csv.reader(data_file, delimiter=',')
         csv_reader = csv.DictReader(data_file, delimiter=',')
         file_reader = []
         file_reader.extend(csv_reader)
@@ -65,7 +78,6 @@ class AccountMoveImportCsvWizard(models.TransientModel):
             if line['type'] != 'Order':
                 continue
             try:
-                date_time = self.parse_date(date_str=line['date/time'])
                 origin = line['order id']
                 default_code = line['sku']
                 price_unit = float(line['product sales']) / float(line['quantity'])
@@ -89,7 +101,12 @@ class AccountMoveImportCsvWizard(models.TransientModel):
                 break
                 #continue
 
-            invoice_line_cmd.update({'price_unit': price_unit, 'quantity': quantity, 'product_id': product_id.id})
+            invoice_line_cmd.update({
+                'price_unit': price_unit, 
+                'quantity': quantity, 
+                'product_id': product_id.id, 
+                'tax_ids': [(6, 0, [vat_tax.id])] if apply_tax else []
+            })
 
             sale_id = self.env['sale.order'].search([('origin', 'ilike', origin)])
             if sale_id:
