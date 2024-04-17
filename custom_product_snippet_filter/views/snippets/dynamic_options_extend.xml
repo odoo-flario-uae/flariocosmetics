@@ -1,7 +1,0 @@
-<odoo>
-    <template id="s_dynamic_snippet_products_template_options_extend" inherit_id="website_sale.s_dynamic_snippet_products_template_options">
-        <xpath expr="//we-select[@data-name='filter_opt']" position="inside">
-            <we-button data-select-data-attribute="in_order">In Order</we-button>
-        </xpath>
-    </template>
-</odoo>

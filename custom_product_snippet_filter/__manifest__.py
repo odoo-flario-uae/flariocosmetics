@@ -19,12 +19,11 @@
     'category': 'Uncategorized',
     
     'version': '1.0',
-    'depends': ['website_sale', 'website'],
+    'depends': ['website_sale', 'website '],
 
 
     # always loaded
     'data': [
-        'views/website_sale_custom_filters.xml',
-        'views/snippets/dynamic_options_extend.xml',
+        'views/website_sale_custom_filters.xml'
     ]
 }
