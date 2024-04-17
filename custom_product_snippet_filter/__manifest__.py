@@ -19,7 +19,7 @@
     'category': 'Uncategorized',
     
     'version': '1.0',
-    'depends': ['website_sale', 'website '],
+    'depends': ['website_sale', 'website'],
 
 
     # always loaded
