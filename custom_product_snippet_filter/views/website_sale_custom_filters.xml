@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Фильтр для сортировки продуктов по порядку их внутренней последовательности на сайте -->
+        <record id="in_order_products_filter" model="ir.filters">
+            <field name="name">In Order Products</field>
+            <field name="model_id">product.product</field>
+            <field name="user_id" eval="False"/>
+            <field name="domain">[('website_published', '=', True)]</field>
+            <field name="context">{'display_default_code': False}</field>
+            <field name="sort">['website_sequence']</field>
+            <field name="action_id" ref="website.action_website"/>
+        </record>
+
+        <!-- Dynamic Filter Definition -->
+        <record id="dynamic_filter_in_order_products" model="website.snippet.filter">
+            <field name="filter_id" ref="custom_product_snippet_filter.in_order_products_filter"/>
+            <field name="field_names">display_name,description_sale,image_512</field>
+            <field name="limit" eval="16"/>
+            <field name="name">In Order Products</field>
+        </record>
+    </data>
+</odoo>
