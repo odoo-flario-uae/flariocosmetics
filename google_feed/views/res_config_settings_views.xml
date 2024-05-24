@@ -9,35 +9,49 @@
                     <h2>Google Feed Settings</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6">
-                            <div class="form-group">
+                            <div class="row mt8">
                                 <label for="google_feed_enabled">Enable Google Feed</label>
-                                <field name="google_feed_enabled" widget="boolean"/>
+                                <div>
+                                    <field name="google_feed_enabled" widget="boolean"/>
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row mt8">
                                 <label for="google_feed_location_id">Location</label>
-                                <field name="google_feed_location_id" widget="many2one"/>
+                                <div>
+                                    <field name="google_feed_location_id" widget="many2one"/>
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row mt8">
                                 <label for="google_feed_root_category_id">Root Category</label>
-                                <field name="google_feed_root_category_id" widget="many2one"/>
+                                <div>
+                                    <field name="google_feed_root_category_id" widget="many2one"/>
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row mt8">
                                 <label for="google_feed_title">Feed Title</label>
-                                <field name="google_feed_title"/>
+                                <div>
+                                    <field name="google_feed_title"/>
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row mt8">
                                 <label for="google_feed_link">Feed Link</label>
-                                <field name="google_feed_link"/>
+                                <div>
+                                    <field name="google_feed_link"/>
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row mt8">
                                 <label for="google_feed_description">Feed Description</label>
-                                <field name="google_feed_description"/>
+                                <div>
+                                    <field name="google_feed_description"/>
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row mt8">
                                 <label for="google_feed_currency">Feed Currency</label>
-                                <field name="google_feed_currency"/>
+                                <div>
+                                    <field name="google_feed_currency"/>
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row mt8">
                                 <label for="google_feed_url">Feed URL</label>
                                 <field name="google_feed_url" readonly="1"/>
                             </div>

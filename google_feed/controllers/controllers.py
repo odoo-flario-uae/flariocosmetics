@@ -23,62 +23,55 @@ class GoogleFeedController(http.Controller):
         _logger.info(f"Generating Google feed for website: {website.name}")
         _logger.info(f"Location ID: {location_id}, Root Category ID: {root_category_id}")
 
-        products = self.get_products(location_id, root_category_id, website.id)
-        if not products:
-            _logger.warning("No products found for the given location and category.")
-
+        products = self.get_products(location_id, root_category_id)
         feed = self.generate_feed(products, title, link, description, currency)
-        clean_feed = self.clean_xml(feed)
-        return request.make_response(clean_feed, headers=[('Content-Type', 'application/xml')])
+        return request.make_response(self.remove_scripts(feed), headers=[('Content-Type', 'application/xml')])
 
-    def get_products(self, location_id, root_category_id, website_id):
+    def get_products(self, location_id, root_category_id):
         ProductTemplate = request.env['product.template']
         products = ProductTemplate.search([
-            ('sale_ok', '=', True),
-            ('is_published', '=', True)
+            ('website_published', '=', True),
+            ('sale_ok', '=', True)
         ]).read([
-            'name', 'description', 'image_1920', 'product_variant_ids', 'default_code', 'barcode', 'public_categ_ids'
+            'name', 'description', 'image_1920', 'product_variant_ids', 'default_code', 'public_categ_ids', 'barcode'
         ])
-        _logger.info(f"Found {len(products)} products")
         product_list = []
         for product in products:
+            item_group_id, product_type, category_link = self.get_category_info(product['public_categ_ids'], root_category_id)
             product_data = {
                 'name': product['name'],
                 'description': self.strip_html(product['description']),
                 'image_url': self.get_image_url(product['id']),
-                'link': self.get_product_url(product['id']),
-                'price': self.get_product_price(product['product_variant_ids'][0], request.website.google_feed_currency),
+                'link': self.get_product_url(product['id'], category_link),
+                'price': self.get_product_price(product['product_variant_ids'][0]),
                 'availability': self.get_product_stock(product['product_variant_ids'][0], location_id),
-                'item_group_id': self.get_category_id(product['public_categ_ids'], root_category_id),
-                'product_type': self.get_category_name(product['public_categ_ids']),
-                'id': product['default_code'],
+                'id': product['default_code'] if product['default_code'] else product['id'],
                 'gtin': product['barcode'],
-                'inventory': self.get_product_inventory(product['product_variant_ids'][0], location_id)
+                'item_group_id': item_group_id,
+                'product_type': product_type
             }
             product_list.append(product_data)
-        _logger.info(f"Processed {len(product_list)} products")
         return product_list
 
     def strip_html(self, text):
         if not text:
             return ''
-        clean_text = re.sub(r'<script.*?</script>', '', text, flags=re.DOTALL)
-        clean_text = re.sub(r'<.*?>', '', clean_text)
-        return clean_text
+        return re.sub(r'<.*?>', '', text)
 
     def get_image_url(self, product_id):
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return f'{base_url}/web/image/product.product/{product_id}/image_1024'
 
-    def get_product_url(self, product_id):
+    def get_product_url(self, product_id, category_link):
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        product = request.env['product.template'].browse(product_id)
-        categories = product.public_categ_ids.mapped('name')
-        return f"{base_url}/shop/product/{product_id}?category={'&category='.join(categories)}"
+        if category_link:
+            return f"{base_url}/shop/product/{product_id}?category={category_link}"
+        else:
+            return f"{base_url}/shop/product/{product_id}"
 
-    def get_product_price(self, product_variant_id, currency):
+    def get_product_price(self, product_variant_id):
         product = request.env['product.product'].browse(product_variant_id)
-        return f"{product.list_price:.2f} {currency}"
+        return f"{product.list_price:.2f}"
 
     def get_product_stock(self, product_variant_id, location_id):
         stock_quant = request.env['stock.quant'].sudo().search([
@@ -87,28 +80,30 @@ class GoogleFeedController(http.Controller):
         ], limit=1)
         return 'in stock' if stock_quant.quantity > 0 else 'out of stock'
 
-    def get_product_inventory(self, product_variant_id, location_id):
-        stock_quant = request.env['stock.quant'].sudo().search([
-            ('product_id', '=', product_variant_id),
-            ('location_id', '=', location_id)
-        ], limit=1)
-        return stock_quant.quantity if stock_quant.quantity > 0 else None
+    def get_category_info(self, public_categ_ids, root_category_id):
+        categories = request.env['product.public.category'].search([('id', 'child_of', root_category_id)], order='sequence asc')
+        for category in categories:
+            if category.id in public_categ_ids:
+                child_category = self.get_child_category(category)
+                parent_path = self.get_category_path(child_category)
+                return child_category.id, parent_path, child_category.id
+        return None, None, None
 
-    def get_category_id(self, public_categ_ids, root_category_id):
-        if not public_categ_ids:
-            return root_category_id
-        return public_categ_ids[0]
+    def get_child_category(self, category):
+        child_categories = category.child_id
+        if child_categories:
+            return child_categories[0]
+        return category
 
-    def get_category_name(self, public_categ_ids):
-        if not public_categ_ids:
-            return 'Uncategorized'
-        category = request.env['product.public.category'].browse(public_categ_ids[0])
-        category_chain = [category.name]
+    def get_category_path(self, category):
+        path = [category.name]
         while category.parent_id:
-            category_chain.append(category.parent_id.name)
             category = category.parent_id
-        category_chain.reverse()
-        return 'Home > ' + ' > '.join(category_chain)
+            path.append(category.name)
+        return ' > '.join(reversed(path))
+
+    def remove_scripts(self, xml_content):
+        return re.sub(r'<script.*?</script>', '', xml_content, flags=re.DOTALL)
 
     def generate_feed(self, products, title, link, description, currency):
         xml_content = f"""<?xml version="1.0" encoding="UTF-8" ?>
@@ -117,46 +112,53 @@ class GoogleFeedController(http.Controller):
                 <title>{title}</title>
                 <link>{link}</link>
                 <description>{description}</description>
-                {self.generate_items(products)}
+                {self.generate_items(products, currency)}
             </channel>
         </rss>"""
         return xml_content
 
-    def generate_items(self, products):
+    def generate_items(self, products, currency):
         item_template = """
             <item>
                 <title>{name}</title>
                 <link>{link}</link>
                 <description>{description}</description>
-                <g:price>{price}</g:price>
+                <g:price>{price} {currency}</g:price>
                 <g:image_link>{image_url}</g:image_link>
                 <g:availability>{availability}</g:availability>
-                <g:item_group_id>{item_group_id}</g:item_group_id>
-                <g:product_type>{product_type}</g:product_type>
                 <g:id>{id}</g:id>
-                <g:gtin>{gtin}</g:gtin>
-                {inventory}
+                {gtin_tag}
+                {inventory_tag}
                 <g:condition>new</g:condition>
+                {item_group_id_tag}
+                {product_type_tag}
             </item>
         """
-        items = ''.join([
-            item_template.format(
+        items = ''
+        for product in products:
+            gtin_tag = f"<g:gtin>{product['gtin']}</g:gtin>" if product['gtin'] else ''
+            inventory_tag = f"<g:inventory>{self.get_inventory(product)}</g:inventory>" if product['availability'] == 'in stock' else ''
+            item_group_id_tag = f"<g:item_group_id>{product['item_group_id']}</g:item_group_id>" if product['item_group_id'] else ''
+            product_type_tag = f"<g:product_type>Home > {product['product_type']}</g:product_type>" if product['product_type'] else ''
+            items += item_template.format(
                 name=product['name'],
                 link=product['link'],
                 description=product['description'],
                 price=product['price'],
                 image_url=product['image_url'],
                 availability=product['availability'],
-                item_group_id=product['item_group_id'],
-                product_type=product['product_type'],
                 id=product['id'],
-                gtin=product['gtin'],
-                inventory=f"<g:inventory>{product['inventory']}</g:inventory>" if product['inventory'] else ""
+                gtin_tag=gtin_tag,
+                inventory_tag=inventory_tag,
+                item_group_id_tag=item_group_id_tag,
+                product_type_tag=product_type_tag,
+                currency=currency
             )
-            for product in products
-        ])
         return items
 
-    def clean_xml(self, xml_content):
-        clean_content = re.sub(r'<script.*?>.*?</script>', '', xml_content, flags=re.DOTALL)
-        return clean_content
+    def get_inventory(self, product):
+        stock_quant = request.env['stock.quant'].sudo().search([
+            ('product_id', '=', product['id']),
+            ('location_id', '=', product['location_id'])
+        ], limit=1)
+        return stock_quant.quantity if stock_quant else 0
