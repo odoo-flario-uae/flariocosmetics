@@ -1,0 +1,50 @@
+<odoo>
+    <record id="website_config_settings_view_form_inherit_google_feed" model="ir.ui.view">
+        <field name="name">website.config.settings.view.form.inherit.google.feed</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='website_info_settings']" position="after">
+                <div class="app_settings_block" data-string="Google Feed Settings" string="Google Feed Settings" data-key="google_feed">
+                    <h2>Google Feed Settings</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <label for="google_feed_enabled">Enable Google Feed</label>
+                                <field name="google_feed_enabled" widget="boolean"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="google_feed_location_id">Location</label>
+                                <field name="google_feed_location_id" widget="many2one"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="google_feed_root_category_id">Root Category</label>
+                                <field name="google_feed_root_category_id" widget="many2one"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="google_feed_title">Feed Title</label>
+                                <field name="google_feed_title"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="google_feed_link">Feed Link</label>
+                                <field name="google_feed_link"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="google_feed_description">Feed Description</label>
+                                <field name="google_feed_description"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="google_feed_currency">Feed Currency</label>
+                                <field name="google_feed_currency"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="google_feed_url">Feed URL</label>
+                                <field name="google_feed_url" readonly="1"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
