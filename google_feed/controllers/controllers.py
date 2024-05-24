@@ -1,6 +1,9 @@
+import logging
 from odoo import http
 from odoo.http import request
 import re
+
+_logger = logging.getLogger(__name__)
 
 class GoogleFeedController(http.Controller):
 
@@ -17,16 +20,26 @@ class GoogleFeedController(http.Controller):
         description = website.google_feed_description
         currency = website.google_feed_currency
 
-        products = self.get_products(location_id, root_category_id)
+        _logger.info(f"Generating Google feed for website: {website.name}")
+        _logger.info(f"Location ID: {location_id}, Root Category ID: {root_category_id}")
+
+        products = self.get_products(location_id, root_category_id, website.id)
+        if not products:
+            _logger.warning("No products found for the given location and category.")
+
         feed = self.generate_feed(products, title, link, description, currency)
         clean_feed = self.clean_xml(feed)
         return request.make_response(clean_feed, headers=[('Content-Type', 'application/xml')])
 
-    def get_products(self, location_id, root_category_id):
+    def get_products(self, location_id, root_category_id, website_id):
         ProductTemplate = request.env['product.template']
-        products = ProductTemplate.search([('sale_ok', '=', True)]).read([
+        products = ProductTemplate.search([
+            ('sale_ok', '=', True),
+            ('is_published', '=', True)
+        ]).read([
             'name', 'description', 'image_1920', 'product_variant_ids', 'default_code', 'barcode', 'public_categ_ids'
         ])
+        _logger.info(f"Found {len(products)} products")
         product_list = []
         for product in products:
             product_data = {
@@ -43,12 +56,12 @@ class GoogleFeedController(http.Controller):
                 'inventory': self.get_product_inventory(product['product_variant_ids'][0], location_id)
             }
             product_list.append(product_data)
+        _logger.info(f"Processed {len(product_list)} products")
         return product_list
 
     def strip_html(self, text):
         if not text:
             return ''
-        # Remove all HTML tags and scripts
         clean_text = re.sub(r'<script.*?</script>', '', text, flags=re.DOTALL)
         clean_text = re.sub(r'<.*?>', '', clean_text)
         return clean_text
@@ -145,6 +158,5 @@ class GoogleFeedController(http.Controller):
         return items
 
     def clean_xml(self, xml_content):
-        # Remove all <script> tags
         clean_content = re.sub(r'<script.*?>.*?</script>', '', xml_content, flags=re.DOTALL)
         return clean_content
