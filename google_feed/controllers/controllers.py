@@ -2,6 +2,7 @@ import logging
 from odoo import http
 from odoo.http import request
 import re
+from xml.sax.saxutils import escape
 
 _logger = logging.getLogger(__name__)
 
@@ -33,14 +34,14 @@ class GoogleFeedController(http.Controller):
             ('website_published', '=', True),
             ('sale_ok', '=', True)
         ]).read([
-            'name', 'description', 'image_1920', 'product_variant_ids', 'default_code', 'public_categ_ids', 'barcode'
+            'name', 'description_sale', 'image_1920', 'product_variant_ids', 'default_code', 'public_categ_ids', 'barcode'
         ])
         product_list = []
         for product in products:
             item_group_id, product_type, category_link = self.get_category_info(product['public_categ_ids'], root_category_id)
             product_data = {
                 'name': product['name'],
-                'description': self.strip_html(product['description']),
+                'description': self.strip_html(product['description_sale']),
                 'image_url': self.get_image_url(product['id']),
                 'link': self.get_product_url(product['id'], category_link),
                 'price': self.get_product_price(product['product_variant_ids'][0]),
@@ -48,7 +49,8 @@ class GoogleFeedController(http.Controller):
                 'id': product['default_code'] if product['default_code'] else product['id'],
                 'gtin': product['barcode'],
                 'item_group_id': item_group_id,
-                'product_type': product_type
+                'product_type': product_type,
+                'location_id': location_id  # Add location_id here
             }
             product_list.append(product_data)
         return product_list
@@ -57,6 +59,9 @@ class GoogleFeedController(http.Controller):
         if not text:
             return ''
         return re.sub(r'<.*?>', '', text)
+
+    def clean_title(self, title):
+        return title.replace('&', 'and')
 
     def get_image_url(self, product_id):
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -139,11 +144,11 @@ class GoogleFeedController(http.Controller):
             gtin_tag = f"<g:gtin>{product['gtin']}</g:gtin>" if product['gtin'] else ''
             inventory_tag = f"<g:inventory>{self.get_inventory(product)}</g:inventory>" if product['availability'] == 'in stock' else ''
             item_group_id_tag = f"<g:item_group_id>{product['item_group_id']}</g:item_group_id>" if product['item_group_id'] else ''
-            product_type_tag = f"<g:product_type>Home > {product['product_type']}</g:product_type>" if product['product_type'] else ''
+            product_type_tag = f"<g:product_type>{product['product_type']}</g:product_type>" if product['product_type'] else ''
             items += item_template.format(
-                name=product['name'],
+                name=escape(product['name']),
                 link=product['link'],
-                description=product['description'],
+                description=escape(product['description']),
                 price=product['price'],
                 image_url=product['image_url'],
                 availability=product['availability'],
