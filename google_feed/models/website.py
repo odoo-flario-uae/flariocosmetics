@@ -13,6 +13,7 @@ class Website(models.Model):
     google_feed_url = fields.Char(string="Feed URL", compute="_compute_google_feed_url")
 
     def _compute_google_feed_url(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        site_url = self.domain or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        # base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for website in self:
-            website.google_feed_url = f"{base_url}/google_feed.xml"
+            website.google_feed_url = f"{site_url}/google_feed.xml"

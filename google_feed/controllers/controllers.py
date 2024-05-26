@@ -20,15 +20,16 @@ class GoogleFeedController(http.Controller):
         link = website.google_feed_link
         description = website.google_feed_description
         currency = website.google_feed_currency
+        site_url = website.domain or request.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         _logger.info(f"Generating Google feed for website: {website.name}")
         _logger.info(f"Location ID: {location_id}, Root Category ID: {root_category_id}")
 
-        products = self.get_products(location_id, root_category_id)
+        products = self.get_products(location_id, root_category_id, site_url)
         feed = self.generate_feed(products, title, link, description, currency)
         return request.make_response(self.remove_scripts(feed), headers=[('Content-Type', 'application/xml')])
 
-    def get_products(self, location_id, root_category_id):
+    def get_products(self, location_id, root_category_id, site_url):
         ProductTemplate = request.env['product.template']
         products = ProductTemplate.search([
             ('website_published', '=', True),
@@ -42,8 +43,8 @@ class GoogleFeedController(http.Controller):
             product_data = {
                 'name': product['name'],
                 'description': self.strip_html(product['description_sale']),
-                'image_url': self.get_image_url(product['id']),
-                'link': self.get_product_url(product['id'], category_link),
+                'image_url': self.get_image_url(product['id'], site_url),
+                'link': self.get_product_url(product['id'], category_link, site_url),
                 'price': self.get_product_price(product['product_variant_ids'][0]),
                 'availability': self.get_product_stock(product['product_variant_ids'][0], location_id),
                 'id': product['default_code'] if product['default_code'] else product['id'],
@@ -63,16 +64,14 @@ class GoogleFeedController(http.Controller):
     def clean_title(self, title):
         return title.replace('&', 'and')
 
-    def get_image_url(self, product_id):
-        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        return f'{base_url}/web/image/product.product/{product_id}/image_1024'
+    def get_image_url(self, product_id, site_url):
+        return f'{site_url}/web/image/product.template/{product_id}/image_1024'
 
-    def get_product_url(self, product_id, category_link):
-        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+    def get_product_url(self, product_id, category_link, site_url):
         if category_link:
-            return f"{base_url}/shop/product/{product_id}?category={category_link}"
+            return f"{site_url}/shop/product/{product_id}?category={category_link}"
         else:
-            return f"{base_url}/shop/product/{product_id}"
+            return f"{site_url}/shop/product/{product_id}"
 
     def get_product_price(self, product_variant_id):
         product = request.env['product.product'].browse(product_variant_id)
