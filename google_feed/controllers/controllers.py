@@ -143,7 +143,7 @@ class GoogleFeedController(http.Controller):
             gtin_tag = f"<g:gtin>{product['gtin']}</g:gtin>" if product['gtin'] else ''
             inventory_tag = f"<g:inventory>{self.get_inventory(product)}</g:inventory>" if product['availability'] == 'in stock' else ''
             item_group_id_tag = f"<g:item_group_id>{product['item_group_id']}</g:item_group_id>" if product['item_group_id'] else ''
-            product_type_tag = f"<g:product_type>{product['product_type']}</g:product_type>" if product['product_type'] else ''
+            product_type_tag = f"<g:product_type>Home > {product['product_type']}</g:product_type>" if product['product_type'] else ''
             items += item_template.format(
                 name=escape(product['name']),
                 link=product['link'],
