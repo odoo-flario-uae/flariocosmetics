@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="website_config_settings_view_form_inherit_website_fast_buy" model="ir.ui.view">
+        <field name="name">website.config.settings.view.form.inherit.website.fast.buy</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='digital_content_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="fast_but_setting">
+                    <div class="o_setting_left_pane">
+                        <field name="website_fast_puchasing"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="website_fast_puchasing"/>
+                        <div class="text-muted">
+                            Allow fast purchasing for website
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="telegram_token">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <label string="Telegram bot token" for="telegram_token"/>
+                        <div class="text-muted">Use this for notify about users and orders to Telegram</div>
+                        <field name="telegram_token" />
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="telegram_chat_id">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <label string="Telegram char ID" for="telegram_chat_id"/>
+                        <div class="text-muted">Clarify ID of chat or group</div>
+                        <field name="telegram_chat_id" />
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="website_config_settings_view_form_inherit_website_google_gtm" model="ir.ui.view">
+        <field name="name">website.config.settings.view.form.inherit.website.google.gtm</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='google_analytics_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="google_gtm_setting">
+                    <div class="o_setting_left_pane">
+                        <field name="has_google_gtm"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="has_google_gtm"/>
+                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                        <div class="text-muted">
+                            Add GTM to track activities
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('has_google_gtm', '=', False)]}">
+                            <div class="row mt16">
+                                <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_gtm"/>
+                                <field name="google_gtm" placeholder="GTM-______"
+                                    attrs="{'required': [('has_google_gtm', '=', True)]}"/>
+                            </div>
+                        </div>
+                        <div attrs="{'invisible': [('has_google_gtm', '=', False)]}" name="google_gtm_help">
+                            <a href="https://www.facebook.com/business/help/952192354843755"
+                                    class="oe_link" target="_blank">
+                                <i class="fa fa-arrow-right"/>
+                                How to set up Meta Pixel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

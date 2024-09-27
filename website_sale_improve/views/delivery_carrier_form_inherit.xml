@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="delivery_carrier_inherit" model="ir.ui.view">
+            <field name="name">delivery.carrier.form.inherit</field>
+            <field name="model">delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='carrier_description']" position="after">
+                    <field name="fee_delivery" placeholder="Use this text if you need to change badge of delivery carrier"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
