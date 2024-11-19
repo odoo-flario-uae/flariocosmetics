@@ -9,6 +9,7 @@ class SaleOrderXlsx(models.AbstractModel):
     def generate_xlsx_report(self, workbook, data, sale):
         for obj in sale:
             order_number = obj.name
+            sales_channel = obj.x_studio_sales_channel
             customer_name = obj.partner_id.display_name
             company_id = obj.partner_id.company_registry if obj.partner_id.company_registry else ""
             street = obj.partner_shipping_id.street if obj.partner_shipping_id.street else ""
@@ -31,17 +32,27 @@ class SaleOrderXlsx(models.AbstractModel):
             sheet.write(2, 1, company_id)
             sheet.write(3, 0, 'Address', bold)
             sheet.write(3, 1, address)
+            sheet.write(4, 0, 'CHANNEL:', bold)
+            sheet.write(4, 1, sales_channel, bold)
+            sheet.write(6, 0, 'SKU', bold)
 
-            sheet.write(5, 0, 'SKU', bold)
-            sheet.write(5, 1, 'Count of Box', bold)
-
-            index = 6
-            for record in obj.order_line:
-                if record.product_id.detailed_type != 'product':
-                   continue
-                if record.product_id.count_in_box == 0:
-                    raise ValidationError(f"Product with SKU {record.product_id.default_code} is not defined count in box")
-                sheet.write(index, 0, record.product_id.default_code)
-                sheet.write(index, 1, round(record.product_uom_qty / record.product_id.count_in_box), align_center)
-                index += 1
+            index = 7
+            if sales_channel == 'Wholesale':
+                sheet.write(6, 1, 'Count of Box', bold)
+                for record in obj.order_line:
+                    if record.product_id.detailed_type != 'product':
+                       continue
+                    if record.product_id.count_in_box == 0:
+                        raise ValidationError(f"Product with SKU {record.product_id.default_code} is not defined count in box")
+                    sheet.write(index, 0, record.product_id.default_code)
+                    sheet.write(index, 1, round(record.product_uom_qty / record.product_id.count_in_box), align_center)
+                    index += 1
+            else:
+                sheet.write(6, 1, 'Count, units', bold)
+                for record in obj.order_line:
+                    if record.product_id.detailed_type != 'product':
+                       continue
+                    sheet.write(index, 0, record.product_id.default_code)
+                    sheet.write(index, 1, record.product_uom_qty, align_center)
+                    index += 1
 
