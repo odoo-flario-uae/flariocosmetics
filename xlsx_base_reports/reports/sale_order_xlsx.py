@@ -71,6 +71,7 @@ class SaleOrderXlsx(models.AbstractModel):
             address_sheet.write(1, 12, order_number)
             address_sheet.write(1, 13, sales_channel)
 
+
             # Sheet 2: SKU Sheet
             sku_sheet_name = f'{order_number} - SKU'
             sku_sheet = workbook.add_worksheet(sku_sheet_name)
