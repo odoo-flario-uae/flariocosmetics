@@ -93,5 +93,5 @@ class SaleOrderXlsx(models.AbstractModel):
                 sku_sheet.write(index, 0, record.product_id.default_code)
                 sku_sheet.write(index, 1, record.product_uom_qty, align_center)
                 if sales_channel == 'Wholesale':
-                    sku_sheet.write(index, 2, record.product_id.count_in_box, align_center)
+                    sku_sheet.write(index, 2, round(record.product_uom_qty / record.product_id.count_in_box), align_center)
                 index += 1
