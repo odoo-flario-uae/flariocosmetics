@@ -82,23 +82,15 @@ class SaleOrderXlsx(models.AbstractModel):
             sku_sheet.write(0, 0, 'SKU', bold)
 
             index = 1
+
+            sku_sheet.write(0, 1, 'Number of pcs', bold)
             if sales_channel == 'Wholesale':
-                sku_sheet.write(0, 1, 'Count of Box', bold)
-                sku_sheet.write(0, 2, 'Count per Box', bold)
-                for record in obj.order_line:
-                    if record.product_id.detailed_type != 'product':
-                        continue
-                    if record.product_id.count_in_box == 0:
-                        raise ValidationError(f"Product with SKU {record.product_id.default_code} is not defined count in box")
-                    sku_sheet.write(index, 0, record.product_id.default_code)
-                    sku_sheet.write(index, 1, round(record.product_uom_qty / record.product_id.count_in_box), align_center)
+                sku_sheet.write(0, 2, 'Number of cartons', bold)
+            for record in obj.order_line:
+                if record.product_id.detailed_type != 'product':
+                    continue
+                sku_sheet.write(index, 0, record.product_id.default_code)
+                sku_sheet.write(index, 1, record.product_uom_qty, align_center)
+                if sales_channel == 'Wholesale':
                     sku_sheet.write(index, 2, record.product_id.count_in_box, align_center)
-                    index += 1
-            else:
-                sku_sheet.write(0, 1, 'Count, units', bold)
-                for record in obj.order_line:
-                    if record.product_id.detailed_type != 'product':
-                        continue
-                    sku_sheet.write(index, 0, record.product_id.default_code)
-                    sku_sheet.write(index, 1, record.product_uom_qty, align_center)
-                    index += 1
+                index += 1
