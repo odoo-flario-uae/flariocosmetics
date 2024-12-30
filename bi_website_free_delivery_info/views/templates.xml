@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <template id="delivery_info" inherit_id="website_sale_delivery.payment_delivery_shipping_method">
+            <xpath expr="//div[@class='o_delivery_carrier_select d-inline']" position="inside">
+                <div class="info">
+                    <input type="hidden" name="website_sale_order" t-att-value="website_sale_order.id"/>
+                      <button role="button" id="info_btn" title="Free Delivery Offer" t-attf-class="btn info_detail info-btn-offer_#{delivery.id}" t-att-data-id="delivery.id" data-toggle="popover" rel="popover" data-target="#ressources-list">
+                        <i class="fa fa-info-circle"></i></button>
+                      
+                      <!-- popover content -->
+                      <p class="info-hover" id="ressources-list">
+                        </p>
+                </div>
+            </xpath>
+        </template>
+        <template id="confirmation_inhert" inherit_id="website_sale.confirmation">
+            <xpath expr="//div[@class='container oe_website_sale py-2']" position="attributes">
+                <attribute name="class">container oe_website_sale py-2 order-confirm</attribute>
+            </xpath>
+        </template>
+        <template id="total_inherit" inherit_id="website_sale.total">
+            <xpath expr="//table" position="after">
+                <div class="offer">
+                    <t t-if="website_sale_order.carrier_id.free_over">
+                            <p class="free-delivery m-3">Order more for ' <b><span class="buy_more_amount"/><span t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/></b>' , to get free delivery
+                                <br/><a href="/shop">Buy More</a>
+                            </p>
+                    </t>
+                </div>
+                <div class="success"></div>
+            </xpath>
+        </template>
+
+        <template id="payment_delivery_methods" inherit_id="website_sale_delivery.payment_delivery_methods">
+            <xpath expr="//label" position="after">
+                <t t-if="delivery_nb != 1">
+                    <t t-if="delivery.free_over">
+                        <div class="info">
+                            <input type="hidden" name="website_sale_order" t-att-value="website_sale_order.id"/>
+                            <button role="button" id="info_btn" title="Free Delivery Offer" t-attf-class="btn info_detail info-btn-offer_#{delivery.id}" t-att-data-id="delivery.id" data-toggle="popover" rel="popover">
+                            <i class="fa fa-info-circle"></i></button>
+                            
+                          
+                          <p class="info-hover d-none" id="ressources-list">
+                            </p>
+                        </div>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

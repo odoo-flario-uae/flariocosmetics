@@ -1,0 +1,48 @@
+.info{
+	display: contents;
+	.info-hover{
+		display: none;
+	}
+	.info-btn-offer{
+		font-size: 18px;
+    	font-weight: bold;
+    	box-shadow: none;
+    	outline: 0 !important;
+	}
+	.info-btn{
+		transition-duration: 0.4s;
+		margin-left: 1rem;
+		border-bottom: none;
+		&:hover{
+			background-color: white;
+			color: black;
+			border: none;
+			.info-hover{
+				display: block !important;
+			}
+		}
+	}
+}
+.info-btn:hover + .info-hover{
+	display: inline-grid;
+    border: 1px solid #000;
+    text-align: center;
+    width: 15rem;
+    margin-left: 2rem;
+    font-size: 15px;
+}
+.popover-body {
+    padding: 0.5rem 0.75rem;
+    color: #212529;
+    font-size: 0.9rem;
+}
+.order-confirm{
+	.offer{
+		display: none;
+	}
+}
+#o_cart_summary{
+	.offer{
+		display: none;
+	}
+}
