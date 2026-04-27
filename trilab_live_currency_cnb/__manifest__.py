@@ -3,7 +3,7 @@
     'author': 'Trilab',
     'website': "https://trilab.pl",
     'support': 'odoo@trilab.pl',
-    'version': '17.0.2',
+    'version': '17.0.2.0.0',
     'category': 'Accounting',
     'summary': """
         Import exchange rates from the Internet. CNB (Czech National Bank)""",
