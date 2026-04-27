@@ -2,7 +2,7 @@
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Website Free Delivery Offers",
-    'version': '16.0.0.0',
+    'version': '17.0.0.0',
     'category': 'eCommerce',
     'summary': "Website Free Delivery Offers Free Shipping Charge on Webshop Delivery Charge Free Delivery Charges Products Shop Free Delivery Charges Free Product Shipping eCommerce Free Product Delivery Web Portal Free Delivery Charge Web Store Free Product Delivery",
     'description': """

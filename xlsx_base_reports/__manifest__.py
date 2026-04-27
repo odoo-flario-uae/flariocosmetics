@@ -5,7 +5,7 @@
     'website': "",
     'support': 'pandrosov98@gmail.com',
     'category': 'Sale',
-    'version': '16.0.1',
+    'version': '17.0.1',
     'license': 'AGPL-3',
     'description': """  This module for export custom xlsx reports
     """,
